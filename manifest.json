@@ -1,0 +1,36 @@
+{
+  "manifest_version": 2,
+  "name": "Salesforce Lightning Admin Enhancer",
+  "description": "Salesforce Admin Enhancer for lightning",
+  "version": "0.2",
+
+  "icons": { 
+    "16":"lightning_stylized_icon__1__icon.png", 
+    "48":"lightning_stylized_icon__1__icon.png", 
+    "128":"lightning_stylized_icon__1__icon.png" 
+  }, 
+  "browser_action": { 
+      "default_icon": "lightning_stylized_icon__1__icon.png"
+  }, 
+
+  "permissions": [
+    "tabs", 
+    "*://*.lightning.force.com/*", 
+    "storage"
+  ],
+    "content_scripts": [
+      {
+        "matches": ["*://*.lightning.force.com/*","*://*.salesforce.com/ui/setup/export/*"],
+        "js": [
+            "jquery-3.3.1.min.js",
+            "arrive.min.js",
+            "actions.js"
+          ],
+        "all_frames": true
+      }
+    ],
+  "options_ui": {
+    "page": "options.html",
+    "open_in_tab": true
+  }
+}
