@@ -37,7 +37,7 @@ function restore_options() {
     minify: true,
     resizePB: true,
     navFavs: true,
-    navFavsLinks: true
+    navFavsLinks: '{"Company Information":"/one/one.app#/setup/CompanyProfileInfo/home", "Process Builder":"/one/one.app#/setup/ProcessAutomation/home", "Users":"/one/one.app#/setup/ManageUsers/home" }'
     //addEdit: false
   }, function(items) {
     document.getElementById('quickFocus').checked = items.quickFocus;
