@@ -6,6 +6,7 @@ var globalMoveQuickFind;
 var globalMinify;
 var globalResizeProcessBuilder;
 var globalNavFavs;
+var globalNavFavsLinks;
 
 //var globalAddEdit;
 
@@ -17,7 +18,8 @@ var globalNavFavs;
 	     	moveQuickFind: true,
 		    minify: true,
 		    resizePB: true,
-		    navFavs: true
+		    navFavs: true,
+		    navFavsLinks: true
 		    //addEdit: true
 		  }, function(items) {
 		  	 globalQuickFocus = items.quickFocus;
@@ -25,6 +27,7 @@ var globalNavFavs;
 		     globalMinify = items.minify;
 		     globalResizeProcessBuilder = items.resizePB;
 		     globalNavFavs = items.navFavs;
+		     globalNavFavsLinks = items.navFavsLinks;
 		     //globalAddEdit = items.addEdit;
 		  });
 	});
@@ -222,10 +225,15 @@ $(document).arrive('.panelContainer', function(){
 	$(document).arrive('.tree-filter.onesetupNavTreeFilter', function(){
 		if(globalNavFavs == true){
 			//console.log("setup loaded");
+			//console.log(globalNavFavsLinks);
 			$(this).after('<style tyle=text/css>.favList{margin-bottom:.5rem; } .favList a:hover{background: var(--lwc-colorBackgroundRowHover,rgb(243, 242, 242));}</style><div class="favList" style="display:block;"><h4 class="slds-text-title_caps section-header" style="padding: 0 0 0 .75rem;">Favorites Quick Menu</h4><ul></ul></div>');
-			$(".favList ul").append('<li><a href="/one/one.app#/setup/CompanyProfileInfo/home" style="display:block;padding:.25rem 0 .25rem .75rem;text-decoration: none;color: var(--lwc-colorTextDefault,rgb(8, 7, 7));">Company Information</a></li>');
-			$(".favList ul").append('<li><a href="/one/one.app#/setup/ProcessAutomation/home" style="display:block;padding:.25rem 0 .25rem .75rem;text-decoration: none;color: var(--lwc-colorTextDefault,rgb(8, 7, 7));">Process Builder</a></li>');
-			$(".favList ul").append('<li><a href="/one/one.app#/setup/ManageUsers/home" style="display:block;padding:.25rem 0 .25rem .75rem;text-decoration: none;color: var(--lwc-colorTextDefault,rgb(8, 7, 7));">Users</a></li>');
+
+			var JSONLinks = JSON.parse(globalNavFavsLinks);	
+			console.log(JSONLinks);
+			for (var key of Object.keys(JSONLinks)) {
+			    //console.log(key + " -> " + JSONLinks[key])
+			    $(".favList ul").append('<li><a href="'+ JSONLinks[key] +'" style="display:block;padding:.25rem 0 .25rem .75rem;text-decoration: none;color: var(--lwc-colorTextDefault,rgb(8, 7, 7));">'+key+'</a></li>');
+			}
 		}
 	})
 

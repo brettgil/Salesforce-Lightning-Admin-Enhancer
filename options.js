@@ -7,13 +7,15 @@ function save_options() {
   var minify = document.getElementById('minify').checked;
   var resizePB = document.getElementById('resizePB').checked;
   var navFavs = document.getElementById('navFavs').checked;
+  var navFavsLinks = document.getElementById('navFavsLinks').value;
   //var addEdit = document.getElementById('addEdit').checked;
   chrome.storage.sync.set({
     quickFocus: quickFocus,
     moveQuickFind: moveQuickFind,
     minify: minify,
     resizePB: resizePB,
-    navFavs: navFavs
+    navFavs: navFavs,
+    navFavsLinks: navFavsLinks
     //addEdit: addEdit
   }, function() {
     // Update status to let user know options were saved.
@@ -34,7 +36,8 @@ function restore_options() {
     moveQuickFind: true,
     minify: true,
     resizePB: true,
-    navFavs: true
+    navFavs: true,
+    navFavsLinks: true
     //addEdit: false
   }, function(items) {
     document.getElementById('quickFocus').checked = items.quickFocus;
@@ -42,6 +45,7 @@ function restore_options() {
     document.getElementById('minify').checked = items.minify;
     document.getElementById('resizePB').checked = items.resizePB;
     document.getElementById('navFavs').checked = items.navFavs;
+    document.getElementById('navFavsLinks').value = items.navFavsLinks;
     //document.getElementById('addEdit').checked = items.addEdit;
   });
 }
