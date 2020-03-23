@@ -8,6 +8,7 @@ function save_options() {
   var resizePB = document.getElementById('resizePB').checked;
   var navFavs = document.getElementById('navFavs').checked;
   var navFavsLinks = document.getElementById('navFavsLinks').value;
+  var logoOpen = document.getElementById('logoOpen').value;
   //var addEdit = document.getElementById('addEdit').checked;
   chrome.storage.sync.set({
     quickFocus: quickFocus,
@@ -15,7 +16,8 @@ function save_options() {
     minify: minify,
     resizePB: resizePB,
     navFavs: navFavs,
-    navFavsLinks: navFavsLinks
+    navFavsLinks: navFavsLinks,
+    logoOpen: logoOpen
     //addEdit: addEdit
   }, function() {
     // Update status to let user know options were saved.
@@ -36,6 +38,7 @@ function restore_options() {
     moveQuickFind: true,
     minify: true,
     resizePB: true,
+    logoOpen: true,
     navFavs: true,
     navFavsLinks: '{"Company Information":"/one/one.app#/setup/CompanyProfileInfo/home", "Process Builder":"/one/one.app#/setup/ProcessAutomation/home", "Users":"/one/one.app#/setup/ManageUsers/home" }'
     //addEdit: false
@@ -44,6 +47,7 @@ function restore_options() {
     document.getElementById('moveQuickFind').checked = items.moveQuickFind;
     document.getElementById('minify').checked = items.minify;
     document.getElementById('resizePB').checked = items.resizePB;
+    document.getElementById('logoOpen').checked = items.logoOpen;
     document.getElementById('navFavs').checked = items.navFavs;
     document.getElementById('navFavsLinks').value = items.navFavsLinks;
     //document.getElementById('addEdit').checked = items.addEdit;

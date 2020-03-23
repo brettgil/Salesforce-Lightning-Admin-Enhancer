@@ -7,6 +7,7 @@ var globalMinify;
 var globalResizeProcessBuilder;
 var globalNavFavs;
 var globalNavFavsLinks;
+var globalLogoOpen;
 
 //var globalAddEdit;
 
@@ -19,7 +20,8 @@ var globalNavFavsLinks;
 		    minify: true,
 		    resizePB: true,
 		    navFavs: true,
-		    navFavsLinks: true
+		    navFavsLinks: true,
+		    logoOpen: true
 		    //addEdit: true
 		  }, function(items) {
 		  	 globalQuickFocus = items.quickFocus;
@@ -28,6 +30,7 @@ var globalNavFavsLinks;
 		     globalResizeProcessBuilder = items.resizePB;
 		     globalNavFavs = items.navFavs;
 		     globalNavFavsLinks = items.navFavsLinks;
+		     globalLogoOpen = items.logoOpen;
 		     //globalAddEdit = items.addEdit;
 		  });
 	});
@@ -239,6 +242,25 @@ $(document).arrive('.panelContainer', function(){
 
 //^^^ Setup Nav Rail Favorites ^^^//
 
+//*** Clickable logo opens regular SF in new tab ***//
+	$(document).arrive('.slds-global-header__logo', function(){
+		//console.log('logoOpen');
+		//console.log(globalLogoOpen);
+		if(globalLogoOpen == 'on'){
+			console.log("setup loaded");
+			console.log(globalLogoOpen);
+			$(this).css('cursor', 'pointer');
+			$(this).click(function() {
+			  window.open('/', '_blank');
+			  return false;
+			});
+
+		}
+	})
+
+//^^^ Clickable logo opens regular SF in new tab ^^^//
+
+
 // Store ApexPostScript values in plugin and auto populate.
 
 //*** Add quick links to the Object Search section. (ex: Account, Opportunity, Contact,Task) Auto fill in search text. ***//
@@ -260,10 +282,22 @@ $(document).arrive('.panelContainer', function(){
 
 //^^^ Add quick links to the Object Search section. ^^^//
 
+// allow switching from lightning to classic direct to page / ID you are on. - added to github
+
+// paste an ID into chrome search bar and auto add custom url to SF instead of googling - added to github
+
+// when task is marked complete, refresh task panel and load next task. - added to github
+
+// when we're doing the task and the "related to" is there a way to default to Opportunity instead of accounts? - added to github
+
+// Process Builder - stretch or wrap immediate actions box to read 
+
+// Add quick link from setup back to non-setup without having to click the 9 dots - added to github
+
 // Process builder email alert - link out to email alert
 // Process builder email alert - add copy text link
 
-// Add user admin page link next to all user profile links - ?noredirect=1&isUserEntityOverride=1
+// Add user admin page link next to all user profile links - ?noredirect=1&isUserEntityOverride=1 - added to github
 
 // Feature to toggle remove excess padding / margin (Comfy,Compact,Compressed)
 // Feature to compress Object Header
