@@ -2,7 +2,7 @@
   "manifest_version": 2,
   "name": "Salesforce Lightning Admin Enhancer",
   "description": "Salesforce Admin Enhancer for lightning",
-  "version": "0.3.1",
+  "version": "0.3.2",
 
   "icons": { 
     "16":"lightning_stylized_icon__1__icon.png", 
