@@ -120,7 +120,7 @@ var globalLogoOpen;
 //^^^ Custom formatting ^^^//    
 
 //*** Resize process builder - drag ***//
-$(document).arrive('.panelContainer', function(){
+$(document).arrive('.wrapper.processuiLayout .panelContainer', function(){
 //	$(document).click(function(e) { //<-- used to find the item clicked
   	//console.log(e.target.nodeName);
   	//$('.slds-is-active.active').css("border","solid 10px red");
