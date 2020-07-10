@@ -9,10 +9,6 @@
     "48":"lightning_stylized_icon__1__icon.png", 
     "128":"lightning_stylized_icon__1__icon.png" 
   }, 
-  "browser_action": { 
-      "default_icon": "lightning_stylized_icon__1__icon.png"
-  }, 
-
   "permissions": [
     "tabs", 
     "*://*.lightning.force.com/*", 
