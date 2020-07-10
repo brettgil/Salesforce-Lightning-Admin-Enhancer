@@ -10,7 +10,6 @@
     "128":"lightning_stylized_icon__1__icon.png" 
   }, 
   "permissions": [
-    "tabs", 
     "*://*.lightning.force.com/*", 
     "storage"
   ],
