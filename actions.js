@@ -132,13 +132,9 @@ $(document).arrive('.wrapper.processuiLayout .panelContainer', function(){
 		    	//console.log("handle exists");
 		    }
 		    else{
-		    	$('.panelContainer').css({"position":"absolute","right":"0","height":"calc(100% - 100px)"});
+		    	$('.panelContainer').css({"position":"absolute","right":"0","height":"calc(100% - 150px)"});
 		    	$('.panelContainer').prepend('<div id="handle" style="position:absolute; border-left:solid 1px #cfcfcf; border-right:solid 1px #cfcfcf; height:100%; width: 8px; cursor: col-resize; z-index:100;"><div style="position:absolute;top: 46%;border: solid 1px #cfcfcf;width: 4px;height:35px;left: 1px;background: #cfcfcf;"</div></div>');
 		    	$('.processuicommonPanel .panelBody').css("width","100%");
-		    	$('.processuicommonBanner').css({"height":"25px",});
-		    	$('.processuiHeader').css({"height":"30px","line-height":"30px"});
-		    	$('.processuiLayout.wrapper').css({"padding-top":"50px"});
-		    	$('.processuiLayout.wrapper').after('<style tyle=text/css>.processuiruleCanvasToolbar{top:55px;}</style>');
 		    }
 
 		    var container = $('.wrapper'),
