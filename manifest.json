@@ -1,5 +1,5 @@
 {
-  "manifest_version": 2,
+  "manifest_version": 3,
   "name": "Salesforce Lightning Admin Enhancer",
   "description": "Salesforce Admin Enhancer for lightning",
   "version": "0.3.4",
@@ -10,8 +10,10 @@
     "128":"lightning_stylized_icon__1__icon.png" 
   }, 
   "permissions": [
-    "*://*.lightning.force.com/*", 
     "storage"
+  ],
+  "host_permissions": [
+    "*://*.lightning.force.com/*"
   ],
     "content_scripts": [
       {
