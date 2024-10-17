@@ -1,3 +1,21 @@
+// In your extension's background script.
+/*
+chrome.runtime.onUpdated.addListener(function(oldVersion, newVersion) {
+	// Check the version number of the new extension.
+	if (newVersion > oldVersion) {
+	  // Show an alert about the new features.
+	  chrome.notifications.create(
+		'New features in version ' + newVersion,
+		{
+		  iconUrl: '/images/icon.png',
+		  title: 'New Features',
+		  priority: 'high'
+		}
+	  );
+	}
+  });
+*/
+
 
 (function() {
 // Runs on load	
@@ -8,6 +26,7 @@ var globalResizeProcessBuilder;
 var globalNavFavs;
 var globalNavFavsLinks;
 var globalLogoOpen;
+var globalLaunchURLID;
 
 //var globalAddEdit;
 
@@ -21,7 +40,8 @@ var globalLogoOpen;
 		    resizePB: true,
 		    navFavs: true,
 		    navFavsLinks: true,
-		    logoOpen: true
+		    logoOpen: true,
+			launchURLID: true
 		    //addEdit: true
 		  }, function(items) {
 		  	 globalQuickFocus = items.quickFocus;
@@ -31,9 +51,11 @@ var globalLogoOpen;
 		     globalNavFavs = items.navFavs;
 		     globalNavFavsLinks = items.navFavsLinks;
 		     globalLogoOpen = items.logoOpen;
+			 globalLaunchURLID = items.launchURLID;
 		     //globalAddEdit = items.addEdit;
 		  });
 	});
+
 
 //*** Set focus to Quick Find filter inputs ***//
 // Waits for initial item to load then sets focus after timeout
@@ -227,12 +249,12 @@ $(document).arrive('.wrapper.processuiLayout .panelContainer', function(){
 //*** Setup Nav Rail Favorites ***//
 	$(document).arrive('.tree-filter.onesetupNavTreeFilter', function(){
 		if(globalNavFavs == true){
-			//console.log("setup loaded");
-			//console.log(globalNavFavsLinks);
+			console.log("setup loaded");
+			console.log(globalNavFavsLinks);
 			$(this).after('<style tyle=text/css>.favList{margin-bottom:.5rem; } .favList a:hover{background: var(--lwc-colorBackgroundRowHover,rgb(243, 242, 242));}</style><div class="favList" style="display:block;"><h4 class="slds-text-title_caps section-header" style="padding: 0 0 0 .75rem;">Favorites Quick Menu</h4><ul></ul></div>');
 
 			var JSONLinks = JSON.parse(globalNavFavsLinks);	
-			console.log(JSONLinks);
+			//console.log(JSONLinks);
 			for (var key of Object.keys(JSONLinks)) {
 			    //console.log(key + " -> " + JSONLinks[key])
 			    $(".favList ul").append('<li><a href="'+ JSONLinks[key] +'" style="display:block;padding:.25rem 0 .25rem .75rem;text-decoration: none;color: var(--lwc-colorTextDefault,rgb(8, 7, 7));">'+key+'</a></li>');
@@ -260,6 +282,63 @@ $(document).arrive('.wrapper.processuiLayout .panelContainer', function(){
 
 //^^^ Clickable logo opens regular SF in new tab ^^^//
 
+//*** Add input next to search that opens url if its an ID ***//
+	$(function() {
+		runLaunchURLID('from non-setup');
+	});
+	$(document).arrive('.slds-global-header__item--search', function(){
+		runLaunchURLID('from setup');
+	});
+	function runLaunchURLID(x) {
+		//console.log(x);
+		globalLaunchURLID = 'on';
+		//console.log('globalaunchURLID');
+		//console.log(globalLaunchURLID);
+		if(globalLaunchURLID == 'on'){
+			//console.log("setup loaded");
+			//console.log(globalLaunchURLID);
+			$('.slds-global-header__item--search').css('position', 'relative');
+			$('.slds-global-header__item--search').append(
+				'<div id="launchURLID" style="position:absolute; top:0; left:-200px;">'+
+				'<input type="text" id="record-id" placeholder="Enter record ID" style="'+
+				'border: var(--lwc-borderWidthThin,1px) solid var(--slds-g-color-border-base-1, var(--lwc-colorBorder,rgb(229, 229, 229)));'+
+				'border-radius: var(--lwc-borderRadiusMedium,0.25rem) var(--lwc-borderRadiusMedium,0.25rem);'+
+				'padding: 8px 4px;" />' +
+				'<button type="submit" id="go-button" style="'+
+				'border: var(--lwc-borderWidthThin,1px) solid var(--slds-g-color-border-base-1, var(--lwc-colorBorder,rgb(229, 229, 229)));'+
+				'border-radius: var(--lwc-borderRadiusMedium,0.25rem) var(--lwc-borderRadiusMedium,0.25rem);'+
+				'padding: 8px 4px;">Go</button>'+
+				'</div>'
+			  );
+			  
+				// Get the input field and button elements
+				var inputField = $('#record-id');
+				var button = $('#go-button');
+			  
+				// When the button is clicked or enter pressed, run the function
+				inputField.on('keypress', function(event) {
+					if (event.keyCode == 13) {
+					  // Get the value of the input field
+					  var recordId = inputField.val();
+				
+					  // Do something with the record ID
+					  //console.log('The record ID is: ' + recordId);
+					  window.open('/'+recordId, '_self');
+				  	  return false;
+					}
+				  });
+				button.on('click', function() {
+				  // Get the value of the input field
+				  var recordId = inputField.val();
+			  
+				  // Do something with the record ID
+				  //console.log('The record ID is: ' + recordId);
+				  window.open('/'+recordId, '_self');
+				  return false;
+				});
+		}
+	}
+//^^^ Add input next to search that opens url if its an ID ^^^//
 
 // Store ApexPostScript values in plugin and auto populate.
 
