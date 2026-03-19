@@ -36,6 +36,31 @@
     .feature label {
       cursor: pointer;
     }
+    .feature-block {
+      padding: 10px 0;
+      border-bottom: 1px solid #eee;
+    }
+    .feature-block .feature {
+      border-bottom: none;
+      padding: 0 0 8px 0;
+    }
+    .feature-block label[for="navFavoritesLinks"] {
+      display: block;
+      font-size: 12px;
+      color: #555;
+      margin-bottom: 4px;
+    }
+    #navFavoritesLinks {
+      width: 100%;
+      height: 80px;
+      font-size: 12px;
+      font-family: monospace;
+      padding: 6px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      box-sizing: border-box;
+      resize: vertical;
+    }
     #save {
       margin-top: 24px;
       padding: 8px 20px;
@@ -79,6 +104,15 @@
   <div class="feature">
     <input type="checkbox" id="quickFocus">
     <label for="quickFocus">Quick Focus — auto-focuses the Quick Find input when Setup pages load</label>
+  </div>
+
+  <div class="feature-block">
+    <div class="feature">
+      <input type="checkbox" id="navFavorites">
+      <label for="navFavorites">Setup Nav Favorites — adds a quick-links section to the Setup sidebar</label>
+    </div>
+    <label for="navFavoritesLinks">Customize links (JSON format: {"Label": "/lightning/setup/Page/home"})</label>
+    <textarea id="navFavoritesLinks"></textarea>
   </div>
 
   <button id="save">Save</button>

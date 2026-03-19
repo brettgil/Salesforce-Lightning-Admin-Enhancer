@@ -77,3 +77,36 @@
 .slae-qf-grid header {
   margin-right: 8px !important;
 }
+
+/* --- Nav Favorites --- */
+.slae-nav-favs {
+  margin: 0 0 0.75rem 0;
+}
+
+.slae-nav-favs-heading {
+  display: block;
+  padding: 0.5rem 0 0.25rem 1rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.0625rem;
+  text-transform: uppercase;
+  color: var(--slds-g-color-neutral-base-50, #747474);
+}
+
+.slae-nav-favs-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.slae-nav-favs-link {
+  display: block;
+  padding: 0.25rem 0.5rem 0.25rem 1rem;
+  text-decoration: none;
+  font-size: 0.8125rem;
+  color: var(--lwc-colorTextDefault, #080707);
+}
+
+.slae-nav-favs-link:hover {
+  background: var(--lwc-colorBackgroundRowHover, #f3f2f2);
+}

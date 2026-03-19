@@ -24,4 +24,9 @@
     const { init } = await import(chrome.runtime.getURL('src/features/quickFocus.js'));
     init();
   }
+
+  if (settings.navFavorites) {
+    const { init } = await import(chrome.runtime.getURL('src/features/navFavorites.js'));
+    init(settings.navFavoritesLinks);
+  }
 })();

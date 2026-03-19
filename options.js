@@ -1,15 +1,25 @@
-const DEFAULTS = {
+const DEFAULT_NAV_FAV_LINKS = JSON.stringify({
+  'Company Information': '/lightning/setup/CompanyProfileInfo/home',
+  'Flow': '/lightning/setup/Flows/home',
+  'Users': '/lightning/setup/ManageUsers/home',
+}, null, 2);
+
+const CHECKBOX_DEFAULTS = {
   clickableLogo: true,
   launchById: true,
   quickFindLayout: true,
   quickFocus: true,
+  navFavorites: true,
 };
 
 function saveOptions() {
   const settings = {};
-  for (const key of Object.keys(DEFAULTS)) {
+
+  for (const key of Object.keys(CHECKBOX_DEFAULTS)) {
     settings[key] = document.getElementById(key).checked;
   }
+
+  settings.navFavoritesLinks = document.getElementById('navFavoritesLinks').value.trim();
 
   chrome.storage.sync.set(settings, () => {
     const status = document.getElementById('status');
@@ -19,10 +29,17 @@ function saveOptions() {
 }
 
 function restoreOptions() {
-  chrome.storage.sync.get(DEFAULTS, (settings) => {
+  const defaults = { ...CHECKBOX_DEFAULTS, navFavoritesLinks: DEFAULT_NAV_FAV_LINKS };
+
+  chrome.storage.sync.get(defaults, (settings) => {
     for (const [key, value] of Object.entries(settings)) {
       const el = document.getElementById(key);
-      if (el) el.checked = value;
+      if (!el) continue;
+      if (el.type === 'checkbox') {
+        el.checked = value;
+      } else {
+        el.value = value;
+      }
     }
   });
 }
