@@ -19,4 +19,9 @@
     const { init } = await import(chrome.runtime.getURL('src/features/quickFindLayout.js'));
     init();
   }
+
+  if (settings.quickFocus) {
+    const { init } = await import(chrome.runtime.getURL('src/features/quickFocus.js'));
+    init();
+  }
 })();

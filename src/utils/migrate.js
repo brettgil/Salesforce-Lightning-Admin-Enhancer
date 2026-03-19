@@ -1,6 +1,7 @@
 const V1_TO_V2 = {
   logoOpen: 'clickableLogo',
   moveQuickFind: 'quickFindLayout',
+  quickFocus: 'quickFocus',
 };
 
 const V1_KEYS = Object.keys(V1_TO_V2);

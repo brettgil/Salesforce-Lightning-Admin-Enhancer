@@ -2,6 +2,7 @@ const DEFAULTS = {
   clickableLogo: true,
   launchById: true,
   quickFindLayout: true,
+  quickFocus: true,
 };
 
 /**
