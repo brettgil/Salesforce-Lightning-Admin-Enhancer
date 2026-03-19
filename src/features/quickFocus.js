@@ -6,7 +6,8 @@ function isSetupPage() {
 }
 
 function getActiveSearchInput() {
-  return document.querySelector('.filter-box.input') ||
+  return document.querySelector('.onesetupNavTreeFilter input[type="search"]') ||
+         document.querySelector('.filter-box.input') ||
          document.querySelector('#globalQuickfind') ||
          document.querySelector('.search-button');
 }
@@ -14,6 +15,11 @@ function getActiveSearchInput() {
 export function init() {
   // Setup > Home: focus the sidebar Quick Find filter on arrival
   onElement('.filter-box.input', (input) => {
+    setTimeout(() => input.focus(), 1500);
+  });
+
+  // Setup > Sidebar nav: focus the Quick Find filter on arrival
+  onElement('.onesetupNavTreeFilter input[type="search"]', (input) => {
     setTimeout(() => input.focus(), 1500);
   });
 
