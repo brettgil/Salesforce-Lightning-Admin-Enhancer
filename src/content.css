@@ -59,3 +59,21 @@
 .slae-launch-error--visible {
   display: inline;
 }
+
+/* --- Quick Find Layout --- */
+.slae-qf-left,
+.slae-qf-right {
+  float: left !important;
+}
+
+.slae-qf-right {
+  margin-top: 33px !important;
+}
+
+.slae-qf-grid {
+  display: inline-flex !important;
+}
+
+.slae-qf-grid header {
+  margin-right: 8px !important;
+}

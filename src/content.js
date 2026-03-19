@@ -14,4 +14,9 @@
     const { init } = await import(chrome.runtime.getURL('src/features/launchById.js'));
     init();
   }
+
+  if (settings.quickFindLayout) {
+    const { init } = await import(chrome.runtime.getURL('src/features/quickFindLayout.js'));
+    init();
+  }
 })();

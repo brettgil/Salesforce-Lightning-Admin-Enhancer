@@ -1,6 +1,7 @@
 const DEFAULTS = {
   clickableLogo: true,
   launchById: true,
+  quickFindLayout: true,
 };
 
 function saveOptions() {
