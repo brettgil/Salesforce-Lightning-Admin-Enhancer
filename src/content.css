@@ -1,0 +1,10 @@
+/* ============================================================
+   Salesforce Lightning Admin Enhancer - v2.0.0
+   All extension styles use the .slae- prefix to avoid
+   conflicts with Salesforce's own styles.
+   ============================================================ */
+
+/* --- Clickable Logo --- */
+.slae-clickable-logo {
+  cursor: pointer;
+}
