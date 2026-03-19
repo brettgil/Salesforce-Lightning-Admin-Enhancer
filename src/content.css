@@ -8,3 +8,54 @@
 .slae-clickable-logo {
   cursor: pointer;
 }
+
+/* --- Launch by ID --- */
+.slae-launch-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  position: absolute;
+  right: calc(100% + 8px);
+  top: 50%;
+  transform: translateY(-50%);
+  white-space: nowrap;
+}
+
+.slae-launch-input {
+  width: 180px;
+  padding: 4px 8px;
+  border: 1px solid var(--slds-g-color-border-base-1, rgb(229, 229, 229));
+  border-radius: 4px;
+  font-size: 13px;
+  line-height: 1.5;
+  outline: none;
+}
+
+.slae-launch-input:focus {
+  border-color: var(--slds-g-color-brand-base-40, #0176d3);
+  box-shadow: 0 0 0 1px var(--slds-g-color-brand-base-40, #0176d3);
+}
+
+.slae-launch-button {
+  padding: 4px 10px;
+  border: 1px solid var(--slds-g-color-border-base-1, rgb(229, 229, 229));
+  border-radius: 4px;
+  font-size: 13px;
+  background: #fff;
+  cursor: pointer;
+  line-height: 1.5;
+}
+
+.slae-launch-button:hover {
+  background: #f3f3f3;
+}
+
+.slae-launch-error {
+  display: none;
+  font-size: 11px;
+  color: #c23934;
+}
+
+.slae-launch-error--visible {
+  display: inline;
+}

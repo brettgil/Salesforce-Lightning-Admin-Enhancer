@@ -1,5 +1,6 @@
 const DEFAULTS = {
   clickableLogo: true,
+  launchById: true,
 };
 
 /**
