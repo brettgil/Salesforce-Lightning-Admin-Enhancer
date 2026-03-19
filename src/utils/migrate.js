@@ -4,6 +4,7 @@ const V1_TO_V2 = {
   quickFocus: 'quickFocus',
   navFavs: 'navFavorites',
   navFavsLinks: 'navFavoritesLinks',
+  resizePB: 'processBuilder',
 };
 
 const V1_KEYS = Object.keys(V1_TO_V2);

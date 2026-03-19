@@ -110,3 +110,6 @@
 .slae-nav-favs-link:hover {
   background: var(--lwc-colorBackgroundRowHover, #f3f2f2);
 }
+
+/* --- Process Builder Enhancements --- */
+/* Styles are applied inline to match Salesforce's dynamic layout */

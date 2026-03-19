@@ -29,4 +29,9 @@
     const { init } = await import(chrome.runtime.getURL('src/features/navFavorites.js'));
     init(settings.navFavoritesLinks);
   }
+
+  if (settings.processBuilder) {
+    const { init } = await import(chrome.runtime.getURL('src/features/processBuilder.js'));
+    init();
+  }
 })();

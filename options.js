@@ -10,6 +10,7 @@ const CHECKBOX_DEFAULTS = {
   quickFindLayout: true,
   quickFocus: true,
   navFavorites: true,
+  processBuilder: true,
 };
 
 function saveOptions() {
