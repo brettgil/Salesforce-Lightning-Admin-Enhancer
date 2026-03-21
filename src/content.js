@@ -39,4 +39,9 @@
     const { init } = await import(chrome.runtime.getURL('src/features/orgIdHeader.js'));
     init();
   }
+
+  if (settings.setupFavorites) {
+    const { init } = await import(chrome.runtime.getURL('src/features/setupFavorites.js'));
+    init();
+  }
 })();

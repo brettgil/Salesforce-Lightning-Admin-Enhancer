@@ -139,6 +139,38 @@
       background: #0161b0;
     }
 
+    /* Favorites Backup section */
+    .section-heading {
+      font-weight: 600;
+      margin: 0 0 4px;
+    }
+    .section-desc {
+      font-size: 12px;
+      color: #555;
+      margin: 0 0 10px;
+    }
+    .fav-backup-empty {
+      font-size: 12px;
+      color: #999;
+    }
+    .fav-backup-item {
+      display: flex;
+      flex-direction: column;
+      padding: 5px 0;
+      border-bottom: 1px solid #f5f5f5;
+      font-size: 13px;
+    }
+    .fav-backup-label {
+      font-weight: 500;
+    }
+    .fav-backup-url {
+      color: #555;
+      font-size: 12px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
     #save {
       margin-top: 24px;
       padding: 8px 20px;
@@ -205,6 +237,17 @@
   <div class="feature">
     <input type="checkbox" id="orgIdHeader">
     <label for="orgIdHeader">Org ID in header — displays the 18-digit Org ID in the Setup header, click to copy</label>
+  </div>
+
+  <div class="feature">
+    <input type="checkbox" id="setupFavorites">
+    <label for="setupFavorites">Setup Favorites — enables the Favorites star and dropdown in Setup, synced with your Salesforce favorites</label>
+  </div>
+
+  <div class="feature-block" id="favorites-backup-section">
+    <p class="section-heading">Favorites Backup</p>
+    <p class="section-desc">Your Salesforce favorites are cached when you visit Setup. This is a read-only backup — more management options coming soon.</p>
+    <div id="favorites-backup-list"></div>
   </div>
 
   <button id="save">Save</button>
