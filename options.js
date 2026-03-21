@@ -14,6 +14,95 @@ const CHECKBOX_DEFAULTS = {
   orgIdHeader: true,
 };
 
+// In-memory list of {label, url} objects driving the favorites UI
+let navFavLinks = [];
+let dragSrcIndex = null;
+
+function renderFavList() {
+  const list = document.getElementById('nav-fav-list');
+  list.innerHTML = '';
+
+  if (navFavLinks.length === 0) {
+    const empty = document.createElement('p');
+    empty.className = 'nav-fav-empty';
+    empty.textContent = 'No favorites added yet.';
+    list.appendChild(empty);
+    return;
+  }
+
+  navFavLinks.forEach(({ label, url }, i) => {
+    const row = document.createElement('div');
+    row.className = 'nav-fav-row';
+    row.draggable = true;
+    row.dataset.index = i;
+
+    row.addEventListener('dragstart', (e) => {
+      dragSrcIndex = i;
+      e.dataTransfer.effectAllowed = 'move';
+      row.classList.add('nav-fav-row--dragging');
+    });
+    row.addEventListener('dragend', () => {
+      row.classList.remove('nav-fav-row--dragging');
+      list.querySelectorAll('.nav-fav-row').forEach((r) => r.classList.remove('nav-fav-row--over'));
+    });
+    row.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      e.dataTransfer.dropEffect = 'move';
+      list.querySelectorAll('.nav-fav-row').forEach((r) => r.classList.remove('nav-fav-row--over'));
+      row.classList.add('nav-fav-row--over');
+    });
+    row.addEventListener('drop', (e) => {
+      e.preventDefault();
+      if (dragSrcIndex === null || dragSrcIndex === i) return;
+      const [moved] = navFavLinks.splice(dragSrcIndex, 1);
+      navFavLinks.splice(i, 0, moved);
+      dragSrcIndex = null;
+      renderFavList();
+    });
+
+    const handle = document.createElement('span');
+    handle.className = 'nav-fav-handle';
+    handle.textContent = '⠿';
+    handle.title = 'Drag to reorder';
+
+    const labelEl = document.createElement('span');
+    labelEl.className = 'nav-fav-row-label';
+    labelEl.textContent = label;
+    labelEl.title = label;
+
+    const urlEl = document.createElement('span');
+    urlEl.className = 'nav-fav-row-url';
+    urlEl.textContent = url;
+    urlEl.title = url;
+
+    const removeBtn = document.createElement('button');
+    removeBtn.type = 'button';
+    removeBtn.className = 'nav-fav-remove';
+    removeBtn.textContent = 'Remove';
+    removeBtn.addEventListener('click', () => {
+      navFavLinks.splice(i, 1);
+      renderFavList();
+    });
+
+    row.append(handle, labelEl, urlEl, removeBtn);
+    list.appendChild(row);
+  });
+}
+
+function addFav() {
+  const labelInput = document.getElementById('nav-fav-label');
+  const urlInput = document.getElementById('nav-fav-url');
+  const label = labelInput.value.trim();
+  const url = urlInput.value.trim();
+  if (!label || !url) return;
+
+  navFavLinks.push({ label, url });
+  labelInput.value = '';
+  urlInput.value = '';
+  renderFavList();
+  labelInput.focus();
+}
+
 function saveOptions() {
   const settings = {};
 
@@ -21,7 +110,11 @@ function saveOptions() {
     settings[key] = document.getElementById(key).checked;
   }
 
-  settings.navFavoritesLinks = document.getElementById('navFavoritesLinks').value.trim();
+  const linksObj = {};
+  for (const { label, url } of navFavLinks) {
+    linksObj[label] = url;
+  }
+  settings.navFavoritesLinks = JSON.stringify(linksObj, null, 2);
 
   chrome.storage.sync.set(settings, () => {
     const status = document.getElementById('status');
@@ -37,14 +130,22 @@ function restoreOptions() {
     for (const [key, value] of Object.entries(settings)) {
       const el = document.getElementById(key);
       if (!el) continue;
-      if (el.type === 'checkbox') {
-        el.checked = value;
-      } else {
-        el.value = value;
-      }
+      if (el.type === 'checkbox') el.checked = value;
     }
+
+    try {
+      const parsed = JSON.parse(settings.navFavoritesLinks || '{}');
+      navFavLinks = Object.entries(parsed).map(([label, url]) => ({ label, url }));
+    } catch {
+      navFavLinks = [];
+    }
+    renderFavList();
   });
 }
 
 document.addEventListener('DOMContentLoaded', restoreOptions);
 document.getElementById('save').addEventListener('click', saveOptions);
+document.getElementById('nav-fav-add-btn').addEventListener('click', addFav);
+document.getElementById('nav-fav-url').addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') addFav();
+});
