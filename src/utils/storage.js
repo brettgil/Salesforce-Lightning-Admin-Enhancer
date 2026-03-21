@@ -12,6 +12,7 @@ const DEFAULTS = {
   navFavorites: true,
   navFavoritesLinks: DEFAULT_NAV_FAV_LINKS,
   processBuilder: true,
+  orgIdHeader: true,
 };
 
 /**

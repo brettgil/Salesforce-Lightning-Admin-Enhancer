@@ -34,4 +34,9 @@
     const { init } = await import(chrome.runtime.getURL('src/features/processBuilder.js'));
     init();
   }
+
+  if (settings.orgIdHeader) {
+    const { init } = await import(chrome.runtime.getURL('src/features/orgIdHeader.js'));
+    init();
+  }
 })();

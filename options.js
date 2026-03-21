@@ -11,6 +11,7 @@ const CHECKBOX_DEFAULTS = {
   quickFocus: true,
   navFavorites: true,
   processBuilder: true,
+  orgIdHeader: true,
 };
 
 function saveOptions() {
