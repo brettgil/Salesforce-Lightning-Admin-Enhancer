@@ -1,6 +1,6 @@
 import { onElement } from '../utils/observer.js';
 
-const CACHE_KEY = 'orgIdCache';
+const cacheKey = () => `orgIdCache_${window.location.hostname}`;
 
 function isSetupPage() {
   return (
@@ -15,8 +15,9 @@ function getApiBaseUrl() {
 }
 
 async function fetchOrgId() {
+  const key = cacheKey();
   const cached = await new Promise((resolve) => {
-    chrome.storage.local.get(CACHE_KEY, (result) => resolve(result[CACHE_KEY]));
+    chrome.storage.local.get(key, (result) => resolve(result[key]));
   });
   if (cached) return cached;
 
@@ -31,7 +32,7 @@ async function fetchOrgId() {
   const id = response?.id;
   if (!id) return null;
 
-  chrome.storage.local.set({ [CACHE_KEY]: id });
+  chrome.storage.local.set({ [key]: id });
   return id;
 }
 
