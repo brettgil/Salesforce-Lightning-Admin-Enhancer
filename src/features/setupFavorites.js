@@ -48,6 +48,19 @@ function showDropdown(anchor, favorites) {
   dropdownEl = document.createElement('div');
   dropdownEl.className = 'slae-fav-dropdown';
 
+  // Header
+  const header = document.createElement('div');
+  header.className = 'slae-fav-dropdown-header';
+  const title = document.createElement('span');
+  title.textContent = 'MY FAVORITES';
+  const closeBtn = document.createElement('button');
+  closeBtn.className = 'slae-fav-dropdown-close';
+  closeBtn.innerHTML = '&times;';
+  closeBtn.addEventListener('click', (e) => { e.stopPropagation(); closeDropdown(); });
+  header.append(title, closeBtn);
+  dropdownEl.appendChild(header);
+
+  // List
   if (favorites.length === 0) {
     const msg = document.createElement('p');
     msg.className = 'slae-fav-dropdown-empty';
@@ -63,7 +76,28 @@ function showDropdown(anchor, favorites) {
       a.className = 'slae-fav-dropdown-link';
       const resolved = resolveTarget(fav.target);
       a.href = resolved;
-      a.textContent = fav.label ?? fav.name ?? fav.target;
+
+      const icon = document.createElement('span');
+      icon.className = 'slae-fav-icon';
+      if (fav.iconColor) icon.style.backgroundColor = `#${fav.iconColor}`;
+      if (fav.iconUrl) {
+        const img = document.createElement('img');
+        img.src = fav.iconUrl;
+        img.alt = '';
+        icon.appendChild(img);
+      }
+
+      const text = document.createElement('span');
+      text.className = 'slae-fav-item-text';
+      const name = document.createElement('span');
+      name.className = 'slae-fav-item-name';
+      name.textContent = fav.name ?? fav.target;
+      const subtitle = document.createElement('span');
+      subtitle.className = 'slae-fav-item-subtitle';
+      subtitle.textContent = fav.subtitle ?? fav.objectType ?? '';
+      text.append(name, subtitle);
+
+      a.append(icon, text);
       a.addEventListener('click', (e) => {
         e.preventDefault();
         closeDropdown();
@@ -75,6 +109,16 @@ function showDropdown(anchor, favorites) {
 
     dropdownEl.appendChild(ul);
   }
+
+  // Footer
+  const footer = document.createElement('div');
+  footer.className = 'slae-fav-dropdown-footer';
+  const editLink = document.createElement('a');
+  editLink.href = '/lightning/favorites/home';
+  editLink.textContent = 'Edit Favorites';
+  editLink.addEventListener('click', (e) => { e.preventDefault(); closeDropdown(); window.location.assign('/lightning/favorites/home'); });
+  footer.appendChild(editLink);
+  dropdownEl.appendChild(footer);
 
   anchor.style.position = 'relative';
   anchor.appendChild(dropdownEl);
