@@ -1,6 +1,5 @@
 import { onElement } from '../utils/observer.js';
 
-const CACHE_KEY = 'favoritesCache';
 
 function getApiBaseUrl() {
   return `https://${window.location.hostname.replace('salesforce-setup.com', 'salesforce.com')}`;
@@ -18,7 +17,6 @@ function sendBgMessage(message) {
 async function loadFavorites() {
   const res = await sendBgMessage({ action: 'fetchFavorites', baseUrl: getApiBaseUrl() });
   const favs = res?.favorites ?? [];
-  if (favs.length > 0) chrome.storage.local.set({ [CACHE_KEY]: favs });
   return favs;
 }
 

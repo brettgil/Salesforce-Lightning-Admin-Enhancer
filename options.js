@@ -144,43 +144,7 @@ function restoreOptions() {
   });
 }
 
-function renderFavoritesBackup() {
-  chrome.storage.local.get('favoritesCache', (result) => {
-    const favs = result.favoritesCache ?? [];
-    const container = document.getElementById('favorites-backup-list');
-    container.innerHTML = '';
-
-    if (favs.length === 0) {
-      const msg = document.createElement('p');
-      msg.className = 'fav-backup-empty';
-      msg.textContent = 'No cached favorites yet. Visit Setup with the feature enabled to populate this.';
-      container.appendChild(msg);
-      return;
-    }
-
-    for (const fav of favs) {
-      const row = document.createElement('div');
-      row.className = 'fav-backup-item';
-
-      const label = document.createElement('span');
-      label.className = 'fav-backup-label';
-      label.textContent = fav.label ?? fav.name ?? '(untitled)';
-
-      const url = document.createElement('span');
-      url.className = 'fav-backup-url';
-      url.textContent = fav.target ?? '';
-      url.title = fav.target ?? '';
-
-      row.append(label, url);
-      container.appendChild(row);
-    }
-  });
-}
-
-document.addEventListener('DOMContentLoaded', () => {
-  restoreOptions();
-  renderFavoritesBackup();
-});
+document.addEventListener('DOMContentLoaded', restoreOptions);
 document.getElementById('save').addEventListener('click', saveOptions);
 document.getElementById('nav-fav-add-btn').addEventListener('click', addFav);
 document.getElementById('nav-fav-url').addEventListener('keydown', (e) => {
