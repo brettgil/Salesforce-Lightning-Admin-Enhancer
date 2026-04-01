@@ -15,7 +15,7 @@ function buildFavorites(linksJson) {
 
   const heading = document.createElement('h4');
   heading.className = 'slae-nav-favs-heading slds-text-title_caps';
-  heading.textContent = 'Favorites';
+  heading.textContent = 'My Setup Shortcuts';
 
   const list = document.createElement('ul');
   list.className = 'slae-nav-favs-list';
