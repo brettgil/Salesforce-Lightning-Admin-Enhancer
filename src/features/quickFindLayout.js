@@ -2,18 +2,27 @@ import { onElement } from '../utils/observer.js';
 
 export function init() {
   onElement('#globalQuickfind', (input) => {
-    // Object Manager Home: move the bRight container (which holds Quick Find)
-    // to the left so it sits alongside the other filters in bLeft
+    // Object Manager Home: .bRight / .bLeft float layout
     const bRight = input.closest('.bRight');
-    if (!bRight) return;
+    if (bRight) {
+      bRight.classList.add('slae-qf-right');
+      bRight.parentElement.querySelector('.bLeft')?.classList.add('slae-qf-left');
+      return;
+    }
 
-    bRight.classList.add('slae-qf-right');
-    bRight.parentElement.querySelector('.bLeft')?.classList.add('slae-qf-left');
+    // Object Manager detail pages (Fields & Relationships, Page Layouts, etc.):
+    // move Quick Find out of the right column into the outer grid, leaving buttons on the right
+    const pageHeader = input.closest('.slds-page-header');
+    if (!pageHeader || pageHeader.dataset.slaeInit) return;
+    pageHeader.dataset.slaeInit = 'true';
 
-    // Object Manager detail pages: make the page header grid inline-flex
-    // so the Quick Find input sits inline with other header elements
-    bRight.closest('.objectManagerVirtualRelatedListCard')
-      ?.querySelectorAll('.slds-page-header .slds-grid')
-      .forEach(grid => grid.classList.add('slae-qf-grid'));
+    const outerGrid = pageHeader.querySelector(':scope > .slds-grid');
+    const rightCol = outerGrid?.querySelector(':scope > .slds-col.slds-no-flex');
+    const searchCol = input.closest('.slds-col');
+    if (!outerGrid || !rightCol || !searchCol) return;
+
+    outerGrid.querySelector(':scope > .slds-has-flexi-truncate')?.classList.add('slae-qf-header');
+    searchCol.classList.add('slae-qf-search-col');
+    outerGrid.insertBefore(searchCol, rightCol);
   });
 }

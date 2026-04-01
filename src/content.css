@@ -78,6 +78,16 @@
   margin-right: 8px !important;
 }
 
+.slae-qf-header {
+  flex: 0 0 auto !important;
+}
+
+.slae-qf-search-col {
+  flex: 1 1 auto;
+  margin: 0 8px;
+  align-self: center;
+}
+
 /* --- Nav Favorites --- */
 .slae-nav-favs {
   margin: 0 0 0.75rem 0;
