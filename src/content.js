@@ -44,4 +44,9 @@
     const { init } = await import(chrome.runtime.getURL('src/features/setupFavorites.js'));
     init();
   }
+
+  if (settings.appSwitchBehavior !== 'off') {
+    const { init } = await import(chrome.runtime.getURL('src/features/appSwitchReturn.js'));
+    init(settings.appSwitchBehavior);
+  }
 })();

@@ -262,5 +262,51 @@
 }
 
 
+/* --- App Switch Return --- */
+#slae-app-switch-banner {
+  position: fixed;
+  top: 56px;
+  left: 0;
+  right: 0;
+  background: #0176d3;
+  color: #fff;
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 99999;
+  font-size: 14px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.slae-app-switch-msg {
+  flex: 1;
+}
+
+.slae-app-switch-link {
+  color: #fff;
+  font-weight: 600;
+  text-decoration: underline;
+}
+
+.slae-app-switch-link:hover {
+  color: #cfe8ff;
+}
+
+.slae-app-switch-close {
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 20px;
+  cursor: pointer;
+  padding: 0 0 0 16px;
+  line-height: 1;
+  opacity: 0.8;
+}
+
+.slae-app-switch-close:hover {
+  opacity: 1;
+}
+
 /* --- Process Builder Enhancements --- */
 /* Styles are applied inline to match Salesforce's dynamic layout */

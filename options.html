@@ -149,6 +149,18 @@
       color: #555;
       margin: 0 0 10px;
     }
+    .feature--select {
+      justify-content: space-between;
+    }
+    .feature--select select {
+      font-size: 13px;
+      padding: 4px 8px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
     #save {
       margin-top: 24px;
       padding: 8px 20px;
@@ -220,6 +232,15 @@
   <div class="feature">
     <input type="checkbox" id="setupFavorites">
     <label for="setupFavorites">Setup Favorites — enables the Favorites star and dropdown in Setup, synced with your Salesforce favorites</label>
+  </div>
+
+  <div class="feature feature--select">
+    <label for="appSwitchBehavior">App Switcher — when switching apps, return to the current record</label>
+    <select id="appSwitchBehavior">
+      <option value="off">Off</option>
+      <option value="auto">Auto-redirect</option>
+      <option value="banner">Show prompt</option>
+    </select>
   </div>
 
   <button id="save">Save</button>

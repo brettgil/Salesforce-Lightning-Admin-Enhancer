@@ -14,6 +14,7 @@ const DEFAULTS = {
   processBuilder: true,
   orgIdHeader: true,
   setupFavorites: true,
+  appSwitchBehavior: 'off',
 };
 
 /**
