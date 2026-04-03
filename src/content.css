@@ -261,20 +261,6 @@
   color: #666;
 }
 
-.slae-fav-dropdown-footer {
-  border-top: 1px solid #e5e5e5;
-  padding: 10px 16px;
-}
-
-.slae-fav-dropdown-footer a {
-  font-size: 13px;
-  color: #0176d3;
-  text-decoration: none;
-}
-
-.slae-fav-dropdown-footer a:hover {
-  text-decoration: underline;
-}
 
 /* --- Process Builder Enhancements --- */
 /* Styles are applied inline to match Salesforce's dynamic layout */

@@ -108,15 +108,6 @@ function showDropdown(anchor, favorites) {
     dropdownEl.appendChild(ul);
   }
 
-  // Footer
-  const footer = document.createElement('div');
-  footer.className = 'slae-fav-dropdown-footer';
-  const editLink = document.createElement('a');
-  editLink.href = '/lightning/favorites/home';
-  editLink.textContent = 'Edit Favorites';
-  editLink.addEventListener('click', (e) => { e.preventDefault(); closeDropdown(); window.location.assign('/lightning/favorites/home'); });
-  footer.appendChild(editLink);
-  dropdownEl.appendChild(footer);
 
   anchor.style.position = 'relative';
   anchor.appendChild(dropdownEl);
