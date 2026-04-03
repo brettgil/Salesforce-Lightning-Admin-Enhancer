@@ -3,249 +3,542 @@
 <head>
   <meta charset="UTF-8">
   <title>Salesforce Lightning Admin Enhancer Options</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #090e1a;
+      --surface:   #0f1624;
+      --surface-2: #162033;
+      --border:    #1d2d45;
+      --accent:    #0ea5e9;
+      --accent-sf: #0176d3;
+      --accent-glow: rgba(14, 165, 233, 0.15);
+      --text:      #e8edf5;
+      --muted:     #6b7fa3;
+      --success:   #10b981;
+      --danger:    #ef4444;
+    }
+
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-family: 'Plus Jakarta Sans', sans-serif;
       font-size: 14px;
-      color: #1d1d1d;
-      max-width: 560px;
-      margin: 32px auto;
-      padding: 0 16px;
+      color: var(--text);
+      background-color: var(--bg);
+      background-image: radial-gradient(circle, #1d2d45 1px, transparent 1px);
+      background-size: 28px 28px;
+      min-height: 100vh;
+      padding: 48px 24px 80px;
     }
-    h2 {
-      font-size: 18px;
-      margin-bottom: 4px;
+
+    .page {
+      max-width: 600px;
+      margin: 0 auto;
     }
-    p {
-      color: #555;
-      margin-bottom: 24px;
+
+    /* ── Header ── */
+    .header {
+      margin-bottom: 40px;
     }
-    .feature {
+
+    .header-eyebrow {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 8px;
+    }
+
+    .header-title {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 26px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: var(--text);
+      line-height: 1.1;
+    }
+
+    .header-title span {
+      color: var(--accent);
+    }
+
+    .header-sub {
+      margin-top: 8px;
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    /* ── Section label ── */
+    .section-label {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin: 32px 0 12px;
       display: flex;
       align-items: center;
       gap: 10px;
-      padding: 10px 0;
-      border-bottom: 1px solid #eee;
-    }
-    .feature input[type="checkbox"] {
-      width: 16px;
-      height: 16px;
-      cursor: pointer;
-      flex-shrink: 0;
-    }
-    .feature label {
-      cursor: pointer;
-    }
-    .feature-block {
-      padding: 10px 0;
-      border-bottom: 1px solid #eee;
-    }
-    .feature-block .feature {
-      border-bottom: none;
-      padding: 0 0 8px 0;
     }
 
-    /* My Setup Shortcuts manager */
-    #nav-fav-list {
+    .section-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    /* ── Feature card ── */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
       margin-bottom: 8px;
+      transition: border-color 0.2s;
     }
-    .nav-fav-empty {
+
+    .card:hover {
+      border-color: #2a3d5a;
+    }
+
+    .feature-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      padding: 16px 20px;
+    }
+
+    .feature-text {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .feature-label {
+      font-family: 'Plus Jakarta Sans', sans-serif;
       font-size: 12px;
-      color: #999;
-      margin: 4px 0 8px;
+      font-weight: 500;
+      color: var(--text);
+      margin-bottom: 3px;
     }
+
+    .feature-desc {
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    /* ── Toggle switch ── */
+    .toggle {
+      position: relative;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .toggle input[type="checkbox"] {
+      position: absolute;
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .toggle-track {
+      display: block;
+      width: 38px;
+      height: 22px;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 11px;
+      cursor: pointer;
+      transition: background 0.2s, border-color 0.2s, box-shadow 0.2s;
+      position: relative;
+    }
+
+    .toggle-thumb {
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      width: 14px;
+      height: 14px;
+      background: var(--muted);
+      border-radius: 50%;
+      transition: transform 0.2s, background 0.2s;
+    }
+
+    .toggle input:checked + .toggle-track {
+      background: var(--accent-sf);
+      border-color: var(--accent-sf);
+      box-shadow: 0 0 10px rgba(1, 118, 211, 0.3);
+    }
+
+    .toggle input:checked + .toggle-track .toggle-thumb {
+      transform: translateX(16px);
+      background: #fff;
+    }
+
+    .toggle-track:hover {
+      border-color: var(--accent);
+    }
+
+    /* ── Expandable block (Nav Favorites) ── */
+    .card-expand {
+      border-top: 1px solid var(--border);
+      padding: 16px 20px;
+    }
+
+    /* ── Nav fav list ── */
+    #nav-fav-list {
+      margin-bottom: 12px;
+      min-height: 0;
+    }
+
+    .nav-fav-empty {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 11px;
+      color: var(--muted);
+      padding: 8px 0;
+    }
+
     .nav-fav-row {
       display: flex;
       align-items: center;
       gap: 8px;
-      padding: 5px 0;
-      border-bottom: 1px solid #f5f5f5;
-      font-size: 13px;
-      cursor: default;
+      padding: 7px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 12px;
     }
+
+    .nav-fav-row:last-child {
+      border-bottom: none;
+    }
+
     .nav-fav-row--dragging {
-      opacity: 0.4;
+      opacity: 0.35;
     }
+
     .nav-fav-row--over {
-      border-top: 2px solid #0176d3;
+      border-top: 2px solid var(--accent);
     }
+
     .nav-fav-handle {
-      color: #bbb;
+      color: var(--border);
       cursor: grab;
-      font-size: 16px;
+      font-size: 15px;
       flex-shrink: 0;
       user-select: none;
+      transition: color 0.15s;
     }
-    .nav-fav-handle:active {
-      cursor: grabbing;
-    }
+
+    .nav-fav-handle:hover { color: var(--muted); }
+    .nav-fav-handle:active { cursor: grabbing; }
+
     .nav-fav-row-label {
       min-width: 130px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 11px;
       font-weight: 500;
+      color: var(--text);
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
     }
+
     .nav-fav-row-url {
       flex: 1;
-      color: #555;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 11px;
+      color: var(--muted);
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
     }
+
     .nav-fav-remove {
       padding: 2px 8px;
-      font-size: 12px;
-      color: #c00;
+      font-size: 11px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      color: var(--danger);
       background: none;
-      border: 1px solid #c00;
+      border: 1px solid rgba(239, 68, 68, 0.3);
       border-radius: 4px;
       cursor: pointer;
       flex-shrink: 0;
+      transition: background 0.15s, border-color 0.15s;
     }
+
     .nav-fav-remove:hover {
-      background: #fff0f0;
+      background: rgba(239, 68, 68, 0.1);
+      border-color: var(--danger);
     }
+
     .nav-fav-add-row {
       display: flex;
       gap: 6px;
-      margin-top: 8px;
+      margin-top: 12px;
     }
+
     .nav-fav-add-row input {
       flex: 1;
-      padding: 5px 8px;
-      font-size: 13px;
-      border: 1px solid #ddd;
-      border-radius: 4px;
-    }
-    .nav-fav-add-row input:focus {
+      padding: 7px 10px;
+      font-size: 12px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 5px;
+      color: var(--text);
       outline: none;
-      border-color: #0176d3;
+      transition: border-color 0.15s;
     }
+
     .nav-fav-add-row input::placeholder {
-      color: #aaa;
+      color: var(--muted);
+      opacity: 0.6;
     }
+
+    .nav-fav-add-row input:focus {
+      border-color: var(--accent);
+    }
+
     #nav-fav-add-btn {
-      padding: 5px 14px;
-      background: #0176d3;
+      padding: 7px 14px;
+      font-size: 12px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: var(--accent-sf);
       color: #fff;
       border: none;
-      border-radius: 4px;
-      font-size: 13px;
+      border-radius: 5px;
       cursor: pointer;
       white-space: nowrap;
+      transition: background 0.15s;
     }
+
     #nav-fav-add-btn:hover {
       background: #0161b0;
     }
 
-    /* Favorites Backup section */
-    .section-heading {
-      font-weight: 600;
-      margin: 0 0 4px;
-    }
-    .section-desc {
-      font-size: 12px;
-      color: #555;
-      margin: 0 0 10px;
-    }
-    .feature--select {
+    /* ── Select row ── */
+    .select-row {
+      display: flex;
+      align-items: center;
       justify-content: space-between;
+      gap: 16px;
+      padding: 16px 20px;
     }
-    .feature--select select {
-      font-size: 13px;
-      padding: 4px 8px;
-      border: 1px solid #ddd;
-      border-radius: 4px;
+
+    .styled-select {
+      appearance: none;
+      background: var(--bg) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%236b7fa3'/%3E%3C/svg%3E") no-repeat right 10px center;
+      border: 1px solid var(--border);
+      border-radius: 5px;
+      color: var(--text);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 12px;
+      padding: 7px 30px 7px 10px;
       cursor: pointer;
+      outline: none;
+      transition: border-color 0.15s;
       flex-shrink: 0;
     }
 
+    .styled-select:focus {
+      border-color: var(--accent);
+    }
+
+    /* ── Save ── */
+    .save-row {
+      margin-top: 32px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
     #save {
-      margin-top: 24px;
-      padding: 8px 20px;
-      background: #0176d3;
+      padding: 10px 28px;
+      background: var(--accent-sf);
       color: #fff;
       border: none;
-      border-radius: 4px;
-      font-size: 14px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-weight: 500;
       cursor: pointer;
+      letter-spacing: 0.04em;
+      transition: background 0.15s, box-shadow 0.15s;
     }
+
     #save:hover {
       background: #0161b0;
+      box-shadow: 0 0 16px rgba(1, 118, 211, 0.35);
     }
+
+    #save:active {
+      transform: translateY(1px);
+    }
+
     #status {
-      margin-top: 10px;
-      font-size: 13px;
-      color: #2e7d32;
-      min-height: 18px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 11px;
+      color: var(--success);
+      min-height: 16px;
+      letter-spacing: 0.04em;
     }
   </style>
 </head>
 <body>
-  <h2>Salesforce Lightning Admin Enhancer</h2>
-  <p>Toggle features on or off. Save and reload your Salesforce page to apply changes.</p>
+  <div class="page">
 
-  <div class="feature">
-    <input type="checkbox" id="clickableLogo">
-    <label for="clickableLogo">Make the Salesforce logo clickable — opens Lightning home in a new tab</label>
-  </div>
+    <!-- Header -->
+    <header class="header">
+      <div class="header-eyebrow">Chrome Extension · Settings</div>
+      <h1 class="header-title">Salesforce Lightning<br>Admin <span>Enhancer</span></h1>
+      <p class="header-sub">Toggle features on or off. Save and reload your Salesforce page to apply changes.</p>
+    </header>
 
-  <div class="feature">
-    <input type="checkbox" id="launchById">
-    <label for="launchById">Launch record by ID — adds an input next to the search bar to navigate directly to any record</label>
-  </div>
+    <!-- Lightning -->
+    <div class="section-label">Lightning</div>
 
-  <div class="feature">
-    <input type="checkbox" id="quickFindLayout">
-    <label for="quickFindLayout">Quick Find layout — moves the Quick Find filter to the left side of the Object Manager header</label>
-  </div>
-
-  <div class="feature">
-    <input type="checkbox" id="quickFocus">
-    <label for="quickFocus">Quick Focus — auto-focuses the Quick Find input when Setup pages load</label>
-  </div>
-
-  <div class="feature-block">
-    <div class="feature">
-      <input type="checkbox" id="navFavorites">
-      <label for="navFavorites">My Setup Shortcuts — adds a shortcuts section to the Setup sidebar</label>
+    <div class="card">
+      <div class="feature-row">
+        <div class="feature-text">
+          <div class="feature-label">Clickable Logo</div>
+          <div class="feature-desc">Makes the Salesforce logo clickable — opens Lightning home in a new tab.</div>
+        </div>
+        <label class="toggle">
+          <input type="checkbox" id="clickableLogo">
+          <span class="toggle-track"><span class="toggle-thumb"></span></span>
+        </label>
+      </div>
     </div>
-    <div id="nav-fav-list"></div>
-    <div class="nav-fav-add-row">
-      <input type="text" id="nav-fav-label" placeholder="Label">
-      <input type="text" id="nav-fav-url" placeholder="/lightning/setup/...">
-      <button type="button" id="nav-fav-add-btn">Add</button>
+
+    <div class="card">
+      <div class="feature-row">
+        <div class="feature-text">
+          <div class="feature-label">Launch by ID</div>
+          <div class="feature-desc">Adds an input next to the search bar to navigate directly to any record by ID.</div>
+        </div>
+        <label class="toggle">
+          <input type="checkbox" id="launchById">
+          <span class="toggle-track"><span class="toggle-thumb"></span></span>
+        </label>
+      </div>
     </div>
+
+    <div class="card">
+      <div class="select-row">
+        <div class="feature-text">
+          <div class="feature-label">App Switcher Return</div>
+          <div class="feature-desc">When switching apps, return to the record you were viewing.</div>
+        </div>
+        <select id="appSwitchBehavior" class="styled-select">
+          <option value="off">Off</option>
+          <option value="auto">Auto-redirect</option>
+          <option value="banner">Show prompt</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Setup -->
+    <div class="section-label">Setup</div>
+
+    <div class="card">
+      <div class="feature-row">
+        <div class="feature-text">
+          <div class="feature-label">Org ID Display</div>
+          <div class="feature-desc">Displays the 18-digit Org ID in the Setup header — click to copy.</div>
+        </div>
+        <label class="toggle">
+          <input type="checkbox" id="orgIdHeader">
+          <span class="toggle-track"><span class="toggle-thumb"></span></span>
+        </label>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="feature-row">
+        <div class="feature-text">
+          <div class="feature-label">Quick Find Layout</div>
+          <div class="feature-desc">Moves the Quick Find filter to the left side of the Object Manager header.</div>
+        </div>
+        <label class="toggle">
+          <input type="checkbox" id="quickFindLayout">
+          <span class="toggle-track"><span class="toggle-thumb"></span></span>
+        </label>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="feature-row">
+        <div class="feature-text">
+          <div class="feature-label">Quick Focus</div>
+          <div class="feature-desc">Auto-focuses the Quick Find input when Setup pages load.</div>
+        </div>
+        <label class="toggle">
+          <input type="checkbox" id="quickFocus">
+          <span class="toggle-track"><span class="toggle-thumb"></span></span>
+        </label>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="feature-row">
+        <div class="feature-text">
+          <div class="feature-label">Setup Favorites</div>
+          <div class="feature-desc">Enables the Favorites star and dropdown in Setup, synced with your Salesforce favorites.</div>
+        </div>
+        <label class="toggle">
+          <input type="checkbox" id="setupFavorites">
+          <span class="toggle-track"><span class="toggle-thumb"></span></span>
+        </label>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="feature-row">
+        <div class="feature-text">
+          <div class="feature-label">My Setup Shortcuts</div>
+          <div class="feature-desc">Adds a custom shortcuts section to the Setup sidebar.</div>
+        </div>
+        <label class="toggle">
+          <input type="checkbox" id="navFavorites">
+          <span class="toggle-track"><span class="toggle-thumb"></span></span>
+        </label>
+      </div>
+      <div class="card-expand">
+        <div id="nav-fav-list"></div>
+        <div class="nav-fav-add-row">
+          <input type="text" id="nav-fav-label" placeholder="Label">
+          <input type="text" id="nav-fav-url" placeholder="/lightning/setup/...">
+          <button type="button" id="nav-fav-add-btn">Add</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="feature-row">
+        <div class="feature-text">
+          <div class="feature-label">Process Builder</div>
+          <div class="feature-desc">Drag-to-resize panel, copy text buttons, full API names in modals.</div>
+        </div>
+        <label class="toggle">
+          <input type="checkbox" id="processBuilder">
+          <span class="toggle-track"><span class="toggle-thumb"></span></span>
+        </label>
+      </div>
+    </div>
+
+    <!-- Save -->
+    <div class="save-row">
+      <button id="save">Save Settings</button>
+      <div id="status"></div>
+    </div>
+
   </div>
-
-  <div class="feature">
-    <input type="checkbox" id="processBuilder">
-    <label for="processBuilder">Process Builder enhancements — drag-to-resize panel, copy text buttons, full API names in modals</label>
-  </div>
-
-  <div class="feature">
-    <input type="checkbox" id="orgIdHeader">
-    <label for="orgIdHeader">Org ID in header — displays the 18-digit Org ID in the Setup header, click to copy</label>
-  </div>
-
-  <div class="feature">
-    <input type="checkbox" id="setupFavorites">
-    <label for="setupFavorites">Setup Favorites — enables the Favorites star and dropdown in Setup, synced with your Salesforce favorites</label>
-  </div>
-
-  <div class="feature feature--select">
-    <label for="appSwitchBehavior">App Switcher — when switching apps, return to the current record</label>
-    <select id="appSwitchBehavior">
-      <option value="off">Off</option>
-      <option value="auto">Auto-redirect</option>
-      <option value="banner">Show prompt</option>
-    </select>
-  </div>
-
-  <button id="save">Save</button>
-  <div id="status"></div>
-
   <script src="options.js"></script>
 </body>
 </html>
