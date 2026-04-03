@@ -57,6 +57,15 @@
     }
   ],
 
+  "action": {
+    "default_popup": "options.html",
+    "default_icon": {
+      "16": "lightning_stylized_icon__1__icon.png",
+      "48": "lightning_stylized_icon__1__icon.png",
+      "128": "lightning_stylized_icon__1__icon.png"
+    }
+  },
+
   "options_ui": {
     "page": "options.html",
     "open_in_tab": true
