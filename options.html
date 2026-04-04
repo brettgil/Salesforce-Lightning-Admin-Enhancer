@@ -227,7 +227,7 @@
     }
 
     .nav-fav-handle {
-      color: var(--border);
+      color: #3d5878;
       cursor: grab;
       font-size: 15px;
       flex-shrink: 0;
@@ -396,6 +396,146 @@
       min-height: 16px;
       letter-spacing: 0.04em;
     }
+
+    /* ── Snippets ── */
+    .snippet-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      padding: 8px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .snippet-row:last-child {
+      border-bottom: none;
+    }
+
+    .snippet-row--dragging { opacity: 0.35; }
+    .snippet-row--over { border-top: 2px solid var(--accent); }
+
+    .snippet-row-body {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .snippet-row-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 2px;
+    }
+
+    .snippet-row-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text);
+      flex: 1;
+      min-width: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .snippet-row-actions {
+      display: flex;
+      gap: 4px;
+      flex-shrink: 0;
+    }
+
+    .snippet-row-preview {
+      font-size: 11px;
+      color: var(--muted);
+      font-family: monospace;
+      white-space: pre-wrap;
+      overflow: hidden;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      min-height: calc(1.6em * 2);
+    }
+
+    .snippet-copy {
+      padding: 2px 8px;
+      font-size: 11px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      color: var(--accent);
+      background: none;
+      border: 1px solid rgba(14, 165, 233, 0.3);
+      border-radius: 4px;
+      cursor: pointer;
+      flex-shrink: 0;
+      white-space: nowrap;
+      min-width: 54px;
+      text-align: center;
+      transition: background 0.15s, border-color 0.15s;
+    }
+
+    .snippet-copy:hover {
+      background: rgba(14, 165, 233, 0.1);
+      border-color: var(--accent);
+    }
+
+    .snippet-empty {
+      font-size: 11px;
+      color: var(--muted);
+      padding: 8px 0;
+    }
+
+    .snippet-add-form {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-top: 12px;
+    }
+
+    .snippet-add-form input,
+    .snippet-add-form textarea {
+      padding: 7px 10px;
+      font-size: 12px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 5px;
+      color: var(--text);
+      outline: none;
+      transition: border-color 0.15s;
+    }
+
+    .snippet-add-form input::placeholder,
+    .snippet-add-form textarea::placeholder {
+      color: var(--muted);
+      opacity: 0.6;
+    }
+
+    .snippet-add-form input:focus,
+    .snippet-add-form textarea:focus {
+      border-color: var(--accent);
+    }
+
+    .snippet-add-form textarea {
+      min-height: 84px;
+      font-family: monospace;
+      font-size: 11px;
+      line-height: 1.6;
+      resize: vertical;
+    }
+
+    #snippet-add-btn {
+      align-self: flex-end;
+      padding: 7px 14px;
+      font-size: 12px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: var(--accent-sf);
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    #snippet-add-btn:hover {
+      background: #0161b0;
+    }
   </style>
 </head>
 <body>
@@ -563,6 +703,20 @@
           <input type="checkbox" id="processBuilder">
           <span class="toggle-track"><span class="toggle-thumb"></span></span>
         </label>
+      </div>
+    </div>
+
+    <!-- Snippets -->
+    <div class="section-label">Snippets</div>
+
+    <div class="card">
+      <div class="card-expand">
+        <div id="snippet-list"></div>
+        <div class="snippet-add-form">
+          <input type="text" id="snippet-label-input" placeholder="Label (e.g. Opportunity Age Formula)">
+          <textarea id="snippet-content-input" placeholder="Formula, SOQL query, or note..."></textarea>
+          <button type="button" id="snippet-add-btn">Add Snippet</button>
+        </div>
       </div>
     </div>
 

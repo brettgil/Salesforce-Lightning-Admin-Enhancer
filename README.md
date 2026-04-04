@@ -47,3 +47,8 @@ When this feature is enabled, a pin icon appears next to each item in the Setup 
 **Process Builder**
 Adds several enhancements to the Process Builder interface: drag to resize the criteria/action panel so you can see more at once, one-click copy buttons on text fields so you can grab values without selecting text manually, and full API names displayed in field selection modals instead of truncated labels.
 
+### Snippets
+
+**Snippets**
+Store frequently used formulas, SOQL queries, and notes for quick access. Snippets are managed from the extension options page — add a label and content, then click Copy to instantly copy the full text to your clipboard. Snippets save immediately when added, removed, or reordered.
+
