@@ -13,6 +13,7 @@ const CHECKBOX_DEFAULTS = {
   processBuilder: true,
   orgIdHeader: true,
   setupFavorites: true,
+  loginAsReturn: true,
 };
 
 // In-memory list of {label, url} objects driving the favorites UI

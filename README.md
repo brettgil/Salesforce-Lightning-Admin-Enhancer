@@ -19,6 +19,9 @@ Adds a record ID input field next to the Lightning search bar. Paste any 15 or 1
 **App Switcher Return**
 When you switch apps using the Salesforce App Launcher, you're dropped on the new app's home page and lose your place. With this feature enabled, the extension remembers the record you were viewing and either automatically redirects you back to it, or shows a dismissible banner with a link. Choose your preferred behavior — auto-redirect or show prompt — from the options page.
 
+**Login As Return**
+When an admin logs out of a Login As session, Salesforce returns them to the Users list instead of the user they were just viewing. With this feature enabled, the extension automatically redirects back to that user's detail page in Setup after logging out.
+
 ### Setup
 
 **Org ID Display**

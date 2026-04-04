@@ -15,6 +15,7 @@ const DEFAULTS = {
   orgIdHeader: true,
   setupFavorites: true,
   appSwitchBehavior: 'off',
+  loginAsReturn: true,
 };
 
 /**

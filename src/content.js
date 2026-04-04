@@ -49,4 +49,9 @@
     const { init } = await import(chrome.runtime.getURL('src/features/appSwitchReturn.js'));
     init(settings.appSwitchBehavior);
   }
+
+  if (settings.loginAsReturn) {
+    const { init } = await import(chrome.runtime.getURL('src/features/loginAsReturn.js'));
+    init();
+  }
 })();
