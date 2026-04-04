@@ -14,6 +14,7 @@ const CHECKBOX_DEFAULTS = {
   orgIdHeader: true,
   setupFavorites: true,
   loginAsReturn: true,
+  recordIdHeader: true,
 };
 
 // In-memory list of {label, url} objects driving the favorites UI

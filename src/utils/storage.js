@@ -16,6 +16,7 @@ const DEFAULTS = {
   setupFavorites: true,
   appSwitchBehavior: 'off',
   loginAsReturn: true,
+  recordIdHeader: true,
 };
 
 /**

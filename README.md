@@ -22,6 +22,9 @@ When you switch apps using the Salesforce App Launcher, you're dropped on the ne
 **Login As Return**
 When an admin logs out of a Login As session, Salesforce returns them to the Users list instead of the user they were just viewing. With this feature enabled, the extension automatically redirects back to that user's detail page in Setup after logging out.
 
+**Record ID Display**
+Shows the current record ID in the Lightning header on any record page — click to copy to clipboard. Updates automatically as you navigate between records.
+
 ### Setup
 
 **Org ID Display**

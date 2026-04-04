@@ -54,4 +54,9 @@
     const { init } = await import(chrome.runtime.getURL('src/features/loginAsReturn.js'));
     init();
   }
+
+  if (settings.recordIdHeader) {
+    const { init } = await import(chrome.runtime.getURL('src/features/recordIdHeader.js'));
+    init();
+  }
 })();

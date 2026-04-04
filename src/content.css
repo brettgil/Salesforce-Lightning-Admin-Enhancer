@@ -143,10 +143,12 @@
 
 .slae-org-id-label {
   line-height: 1.2;
+  white-space: nowrap;
 }
 
 .slae-org-id-value {
   font-weight: 600;
+  white-space: nowrap;
 }
 
 /* --- Setup Favorites --- */
