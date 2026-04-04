@@ -41,4 +41,13 @@ export function init(linksJson) {
     const favs = buildFavorites(linksJson);
     if (favs) filter.before(favs);
   });
+
+  chrome.storage.onChanged.addListener((changes, area) => {
+    if (area !== 'sync' || !('navFavoritesLinks' in changes)) return;
+    const existing = document.getElementById('slae-nav-favs');
+    if (!existing) return;
+    const updated = buildFavorites(changes.navFavoritesLinks.newValue);
+    if (updated) existing.replaceWith(updated);
+    else existing.remove();
+  });
 }

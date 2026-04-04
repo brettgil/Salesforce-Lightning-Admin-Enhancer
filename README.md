@@ -42,6 +42,8 @@ Salesforce's native Favorites feature is not available in Setup by default. This
 **My Setup Shortcuts**
 Adds a configurable shortcuts section directly to the Setup sidebar navigation. Define your own list of frequently-used Setup pages — labels and URLs — and access them with one click from anywhere in Setup. Shortcuts are managed from the extension options page and support drag-to-reorder.
 
+When this feature is enabled, a pin icon appears next to each item in the Setup sidebar when you hover over it. Click the pin to instantly add that page to your shortcuts without leaving the page. Click again to remove it. The shortcuts section updates immediately.
+
 **Process Builder**
 Adds several enhancements to the Process Builder interface: drag to resize the criteria/action panel so you can see more at once, one-click copy buttons on text fields so you can grab values without selecting text manually, and full API names displayed in field selection modals instead of truncated labels.
 

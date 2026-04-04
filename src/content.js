@@ -28,6 +28,8 @@
   if (settings.navFavorites) {
     const { init } = await import(chrome.runtime.getURL('src/features/navFavorites.js'));
     init(settings.navFavoritesLinks);
+    const { init: initNavPin } = await import(chrome.runtime.getURL('src/features/setupNavPin.js'));
+    initNavPin();
   }
 
   if (settings.processBuilder) {
