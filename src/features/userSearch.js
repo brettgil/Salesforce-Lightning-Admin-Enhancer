@@ -122,8 +122,16 @@ function buildWidget() {
     tooltip.textContent = 'Search Users by Name, Username or Email';
     document.body.appendChild(tooltip);
     const rect = btn.getBoundingClientRect();
+    const spaceAbove = rect.top;
+    const tooltipHeight = tooltip.offsetHeight;
+    const below = spaceAbove < tooltipHeight + 16;
     tooltip.style.left = `${rect.left + rect.width / 2}px`;
-    tooltip.style.top = `${rect.top - 8}px`;
+    if (below) {
+      tooltip.classList.add('slae-user-tooltip--below');
+      tooltip.style.top = `${rect.bottom + 8}px`;
+    } else {
+      tooltip.style.top = `${rect.top - 8}px`;
+    }
   });
   btn.addEventListener('mouseleave', () => {
     if (tooltip) { tooltip.remove(); tooltip = null; }

@@ -504,6 +504,10 @@
   pointer-events: none;
 }
 
+.slae-user-tooltip--below {
+  transform: translate(-50%, 0);
+}
+
 .slae-user-tooltip::after {
   content: '';
   position: absolute;
@@ -512,6 +516,13 @@
   transform: translateX(-50%);
   border: 5px solid transparent;
   border-top-color: var(--slds-g-color-surface-container-inverse-1, #16325c);
+}
+
+.slae-user-tooltip--below::after {
+  top: auto;
+  bottom: 100%;
+  border-top-color: transparent;
+  border-bottom-color: var(--slds-g-color-surface-container-inverse-1, #16325c);
 }
 
 /* --- Process Builder Enhancements --- */
