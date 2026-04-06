@@ -22,6 +22,19 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
     return true;
   }
 
+  if (message.action === 'fetchUsers') {
+    getSidCookie(message.url, (cookie) => {
+      if (!cookie) { sendResponse({ records: [] }); return; }
+      fetch(message.url, {
+        headers: { Authorization: `Bearer ${cookie.value}` },
+      })
+        .then((res) => (res.ok ? res.json() : null))
+        .then((data) => sendResponse({ records: data?.records ?? [] }))
+        .catch(() => sendResponse({ records: [] }));
+    });
+    return true;
+  }
+
   if (message.action === 'fetchFavorites') {
     getSidCookie(message.baseUrl, (cookie) => {
       if (!cookie) { sendResponse({ favorites: [] }); return; }

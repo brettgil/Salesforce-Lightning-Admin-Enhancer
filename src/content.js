@@ -61,4 +61,9 @@
     const { init } = await import(chrome.runtime.getURL('src/features/recordIdHeader.js'));
     init();
   }
+
+  if (settings.userSearch) {
+    const { init } = await import(chrome.runtime.getURL('src/features/userSearch.js'));
+    init();
+  }
 })();

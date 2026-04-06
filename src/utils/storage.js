@@ -17,6 +17,7 @@ const DEFAULTS = {
   appSwitchBehavior: 'off',
   loginAsReturn: true,
   recordIdHeader: true,
+  userSearch: true,
 };
 
 /**

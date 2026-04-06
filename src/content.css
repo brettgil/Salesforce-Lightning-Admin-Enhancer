@@ -337,5 +337,182 @@
   opacity: 1;
 }
 
+/* --- User Search --- */
+.slae-user-search {
+  display: flex;
+  align-items: center;
+  position: relative;
+  flex-shrink: 0;
+  align-self: stretch;
+  width: 25px;
+  border: 1px solid #c9c9c9;
+  border-left: none;
+  border-radius: 0 4px 4px 0;
+  background: #fff;
+  margin-left: -1px;
+}
+
+/* In Setup and Lightning, overlay the right edge of the search input */
+.forceSearchInputDesktop .slae-user-search,
+.forceSearchAssistant .slae-user-search {
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  margin-left: 0;
+  border-radius: 0 4px 4px 0;
+}
+
+.forceSearchAssistant {
+  position: relative;
+}
+
+.forceSearchAssistant .slae-user-search {
+  border-color: #747474;
+}
+
+.slae-user-search-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  color: #5e6b79;
+  padding: 0;
+  transition: background 0.15s, color 0.15s;
+  border-radius: 0 4px 4px 0;
+}
+
+.slae-user-search-btn:hover {
+  background: rgba(0, 0, 0, 0.05);
+  color: #0176d3;
+}
+
+.slae-user-search-panel {
+  position: absolute;
+  top: calc(100% + 2px);
+  right: 0;
+  width: 320px;
+  background: #fff;
+  border-radius: 4px;
+  border: 1px solid #dddbda;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  z-index: 9999;
+  overflow: hidden;
+}
+
+.slae-user-search-input {
+  width: 100%;
+  padding: 10px 14px;
+  border: none;
+  border-bottom: 1px solid #e5e5e5;
+  font-size: 13px;
+  outline: none;
+  box-sizing: border-box;
+  font-family: inherit;
+}
+
+.slae-user-search-results {
+  max-height: 320px;
+  overflow-y: auto;
+}
+
+.slae-user-search-status {
+  padding: 12px 14px;
+  font-size: 12px;
+  color: #747474;
+  text-align: center;
+}
+
+.slae-user-result {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  cursor: pointer;
+  border-bottom: 1px solid #f3f3f3;
+  text-decoration: none;
+  color: inherit;
+  gap: 12px;
+}
+
+.slae-user-result:hover {
+  background: #f3f2f2;
+}
+
+.slae-user-result:last-child {
+  border-bottom: none;
+}
+
+.slae-user-result-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.slae-user-result-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: #1d1d1d;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.slae-user-result-meta {
+  font-size: 11px;
+  color: #747474;
+  margin-top: 1px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.slae-user-result-badge {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  padding: 2px 7px;
+  border-radius: 10px;
+  white-space: nowrap;
+  flex-shrink: 0;
+  text-transform: uppercase;
+}
+
+.slae-user-result-badge--active {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+
+.slae-user-result-badge--inactive {
+  background: #fce4ec;
+  color: #b71c1c;
+}
+
+.slae-user-tooltip {
+  position: fixed;
+  transform: translate(-50%, -100%);
+  padding: 12px;
+  border-radius: var(--slds-g-radius-border-2, 5px);
+  background-color: var(--slds-g-color-surface-container-inverse-1, #16325c);
+  color: var(--slds-g-color-on-surface-inverse-1, #fff);
+  font-size: var(--slds-g-font-scale-neg-1, 12px);
+  white-space: nowrap;
+  z-index: 99999;
+  pointer-events: none;
+}
+
+.slae-user-tooltip::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 5px solid transparent;
+  border-top-color: var(--slds-g-color-surface-container-inverse-1, #16325c);
+}
+
 /* --- Process Builder Enhancements --- */
 /* Styles are applied inline to match Salesforce's dynamic layout */
