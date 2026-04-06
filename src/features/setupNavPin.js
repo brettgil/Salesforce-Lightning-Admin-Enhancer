@@ -2,6 +2,7 @@ import { onElement } from '../utils/observer.js';
 
 function getPinnedLinks() {
   return new Promise(resolve => {
+    if (!chrome?.storage?.sync) return resolve({});
     chrome.storage.sync.get({ navFavoritesLinks: '{}' }, result => {
       try { resolve(JSON.parse(result.navFavoritesLinks)); }
       catch { resolve({}); }
@@ -11,6 +12,7 @@ function getPinnedLinks() {
 
 function setPinnedLinks(links) {
   return new Promise(resolve => {
+    if (!chrome?.storage?.sync) return resolve();
     chrome.storage.sync.set(
       { navFavoritesLinks: JSON.stringify(links, null, 2) },
       resolve

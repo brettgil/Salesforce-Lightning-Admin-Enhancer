@@ -5,65 +5,46 @@
   const { getSettings } = await import(chrome.runtime.getURL('src/utils/storage.js'));
   const settings = await getSettings();
 
-  if (settings.clickableLogo) {
-    const { init } = await import(chrome.runtime.getURL('src/features/clickableLogo.js'));
-    init();
+  async function load(key, path, run) {
+    if (!settings[key]) return;
+    try {
+      const { init } = await import(chrome.runtime.getURL(path));
+      run ? run(init) : init();
+    } catch (e) {
+      console.warn(`[SLAE] Failed to load ${key}:`, e);
+    }
   }
 
-  if (settings.launchById) {
-    const { init } = await import(chrome.runtime.getURL('src/features/launchById.js'));
-    init();
-  }
-
-  if (settings.quickFindLayout) {
-    const { init } = await import(chrome.runtime.getURL('src/features/quickFindLayout.js'));
-    init();
-  }
-
-  if (settings.quickFocus) {
-    const { init } = await import(chrome.runtime.getURL('src/features/quickFocus.js'));
-    init();
-  }
+  await load('clickableLogo',    'src/features/clickableLogo.js');
+  await load('launchById',       'src/features/launchById.js');
+  await load('quickFindLayout',  'src/features/quickFindLayout.js');
+  await load('quickFocus',       'src/features/quickFocus.js');
 
   if (settings.navFavorites) {
-    const { init } = await import(chrome.runtime.getURL('src/features/navFavorites.js'));
-    init(settings.navFavoritesLinks);
-    const { init: initNavPin } = await import(chrome.runtime.getURL('src/features/setupNavPin.js'));
-    initNavPin();
+    try {
+      const { init } = await import(chrome.runtime.getURL('src/features/navFavorites.js'));
+      init(settings.navFavoritesLinks);
+      const { init: initNavPin } = await import(chrome.runtime.getURL('src/features/setupNavPin.js'));
+      initNavPin();
+    } catch (e) {
+      console.warn('[SLAE] Failed to load navFavorites:', e);
+    }
   }
 
-  if (settings.processBuilder) {
-    const { init } = await import(chrome.runtime.getURL('src/features/processBuilder.js'));
-    init();
-  }
-
-  if (settings.orgIdHeader) {
-    const { init } = await import(chrome.runtime.getURL('src/features/orgIdHeader.js'));
-    init();
-  }
-
-  if (settings.setupFavorites) {
-    const { init } = await import(chrome.runtime.getURL('src/features/setupFavorites.js'));
-    init();
-  }
+  await load('processBuilder',   'src/features/processBuilder.js');
+  await load('orgIdHeader',      'src/features/orgIdHeader.js');
+  await load('setupFavorites',   'src/features/setupFavorites.js');
 
   if (settings.appSwitchBehavior !== 'off') {
-    const { init } = await import(chrome.runtime.getURL('src/features/appSwitchReturn.js'));
-    init(settings.appSwitchBehavior);
+    try {
+      const { init } = await import(chrome.runtime.getURL('src/features/appSwitchReturn.js'));
+      init(settings.appSwitchBehavior);
+    } catch (e) {
+      console.warn('[SLAE] Failed to load appSwitchReturn:', e);
+    }
   }
 
-  if (settings.loginAsReturn) {
-    const { init } = await import(chrome.runtime.getURL('src/features/loginAsReturn.js'));
-    init();
-  }
-
-  if (settings.recordIdHeader) {
-    const { init } = await import(chrome.runtime.getURL('src/features/recordIdHeader.js'));
-    init();
-  }
-
-  if (settings.userSearch) {
-    const { init } = await import(chrome.runtime.getURL('src/features/userSearch.js'));
-    init();
-  }
+  await load('loginAsReturn',    'src/features/loginAsReturn.js');
+  await load('recordIdHeader',   'src/features/recordIdHeader.js');
+  await load('userSearch',       'src/features/userSearch.js');
 })();
