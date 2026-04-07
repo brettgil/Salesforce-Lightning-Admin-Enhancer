@@ -105,6 +105,8 @@ export function init(behavior) {
     }
   }
 
+  console.log('[SLAE] appSwitchReturn | isRecordUrl:', isRecordUrl(currentUrl));
+
   if (isRecordUrl(currentUrl)) {
     saveRecord(currentUrl);
   }
