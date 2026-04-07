@@ -1,9 +1,21 @@
-// Runs at document_start — before any page JS — so we patch pushState
-// before Salesforce stores its own reference to it.
+// Runs at document_start — before any page JS — so we patch pushState/replaceState
+// before Salesforce stores its own reference to them.
 (function () {
-  const original = history.pushState.bind(history);
-  history.pushState = function (...args) {
-    original(...args);
+  function dispatch() {
     window.dispatchEvent(new CustomEvent('slae-navigate', { detail: { url: window.location.href } }));
+  }
+
+  const origPush = history.pushState.bind(history);
+  history.pushState = function (...args) {
+    origPush(...args);
+    dispatch();
   };
+
+  const origReplace = history.replaceState.bind(history);
+  history.replaceState = function (...args) {
+    origReplace(...args);
+    dispatch();
+  };
+
+  window.addEventListener('popstate', dispatch);
 })();
