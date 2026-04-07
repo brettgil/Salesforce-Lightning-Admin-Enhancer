@@ -1,28 +1,8 @@
-function logAllSalesforceCookies() {
-  const domains = ['salesforce.com', 'force.com', 'salesforce-setup.com'];
-  domains.forEach(domain => {
-    chrome.cookies.getAll({ domain }, (cookies) => {
-      const summary = cookies.map(c => `${c.domain} | ${c.name}=${c.value ? c.value.slice(0,20)+'...' : '(blank)'}`);
-      console.log(`[SLAE] cookies for *.${domain}:`, summary);
-    });
-  });
-}
-
 function getSidCookie(url, tabUrl, callback) {
+  // The my.salesforce.com sid is the valid API session — always try it first.
+  // The setup and lightning domain sids are UI sessions rejected by the REST API.
   const apiUrl = url;
   const setupUrl = url.replace('salesforce.com', 'salesforce-setup.com');
-  const urls = [
-    { label: 'api (my.sf.com)',   url: apiUrl },
-    { label: 'setup (sf-setup)', url: setupUrl },
-    { label: 'tab (lightning)',   url: tabUrl || apiUrl },
-  ];
-  // Log all three sid values so we can compare them
-  urls.forEach(({ label, url: u }) => {
-    chrome.cookies.get({ url: u, name: 'sid' }, (c) => {
-      console.log(`[SLAE] sid @ ${label}: ${c ? c.value.slice(0, 60) : 'NOT FOUND'}`);
-    });
-  });
-  // Try api domain first, then setup, then tab
   chrome.cookies.get({ url: apiUrl, name: 'sid' }, (c1) => {
     if (c1?.value) { callback(c1); return; }
     chrome.cookies.get({ url: setupUrl, name: 'sid' }, (c2) => {
@@ -55,17 +35,13 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
   if (message.action === 'fetchUsers') {
     getSidCookie(message.url, tabUrl, (cookie) => {
-      if (!cookie) { console.warn('[SLAE] fetchUsers — no cookie'); sendResponse({ records: [] }); return; }
-      console.log('[SLAE] fetchUsers — sid domain:', cookie.domain, '| has value:', !!cookie.value);
+      if (!cookie) { sendResponse({ records: [] }); return; }
       fetch(message.url, {
         headers: { Authorization: `Bearer ${cookie.value}` },
       })
-        .then((res) => {
-          console.log('[SLAE] fetchUsers — status:', res.status);
-          return res.ok ? res.json() : res.text().then(t => { console.warn('[SLAE] fetchUsers — error:', t); return null; });
-        })
-        .then((data) => { console.log('[SLAE] fetchUsers — records:', data?.records?.length ?? 'null'); sendResponse({ records: data?.records ?? [] }); })
-        .catch((e) => { console.error('[SLAE] fetchUsers — fetch threw:', e); sendResponse({ records: [] }); });
+        .then((res) => (res.ok ? res.json() : null))
+        .then((data) => sendResponse({ records: data?.records ?? [] }))
+        .catch(() => sendResponse({ records: [] }));
     });
     return true;
   }
