@@ -9,12 +9,26 @@ function logAllSalesforceCookies() {
 }
 
 function getSidCookie(url, tabUrl, callback) {
-  const primaryUrl = tabUrl || url;
-  const fallbackUrl = url.replace('salesforce.com', 'salesforce-setup.com');
-  logAllSalesforceCookies();
-  chrome.cookies.get({ url: primaryUrl, name: 'sid' }, (cookie) => {
-    if (cookie?.value) { callback(cookie); return; }
-    chrome.cookies.get({ url: fallbackUrl, name: 'sid' }, callback);
+  const apiUrl = url;
+  const setupUrl = url.replace('salesforce.com', 'salesforce-setup.com');
+  const urls = [
+    { label: 'api (my.sf.com)',   url: apiUrl },
+    { label: 'setup (sf-setup)', url: setupUrl },
+    { label: 'tab (lightning)',   url: tabUrl || apiUrl },
+  ];
+  // Log all three sid values so we can compare them
+  urls.forEach(({ label, url: u }) => {
+    chrome.cookies.get({ url: u, name: 'sid' }, (c) => {
+      console.log(`[SLAE] sid @ ${label}: ${c ? c.value.slice(0, 60) : 'NOT FOUND'}`);
+    });
+  });
+  // Try api domain first, then setup, then tab
+  chrome.cookies.get({ url: apiUrl, name: 'sid' }, (c1) => {
+    if (c1?.value) { callback(c1); return; }
+    chrome.cookies.get({ url: setupUrl, name: 'sid' }, (c2) => {
+      if (c2?.value) { callback(c2); return; }
+      chrome.cookies.get({ url: tabUrl || apiUrl, name: 'sid' }, callback);
+    });
   });
 }
 
