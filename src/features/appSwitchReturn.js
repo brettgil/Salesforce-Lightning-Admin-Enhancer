@@ -92,10 +92,6 @@ function whenReady(callback) {
 export function init(behavior) {
   const currentUrl = window.location.href;
 
-  console.log('[SLAE] appSwitchReturn init | behavior:', behavior, '| url:', currentUrl);
-  console.log('[SLAE] appSwitchReturn | PENDING_KEY present:', !!sessionStorage.getItem(PENDING_KEY));
-  console.log('[SLAE] appSwitchReturn | LAST_RECORD_KEY:', sessionStorage.getItem(LAST_RECORD_KEY));
-
   // On fresh page load after an app switch: if pending and we didn't land on a record, apply behavior.
   if (sessionStorage.getItem(PENDING_KEY)) {
     if (isRecordUrl(currentUrl)) {
@@ -105,16 +101,13 @@ export function init(behavior) {
     }
   }
 
-  console.log('[SLAE] appSwitchReturn | isRecordUrl:', isRecordUrl(currentUrl));
-
   if (isRecordUrl(currentUrl)) {
     saveRecord(currentUrl);
   }
 
-  // Watch for soft navigations (pushState) via nav-interceptor
+  // App switches are soft navigations via pushState — handle them via slae-navigate.
   window.addEventListener('slae-navigate', (e) => {
     const url = e.detail?.url || window.location.href;
-    console.log('[SLAE] appSwitchReturn slae-navigate | url:', url, '| pending:', !!sessionStorage.getItem(PENDING_KEY));
     if (sessionStorage.getItem(PENDING_KEY)) {
       if (isRecordUrl(url)) {
         sessionStorage.removeItem(PENDING_KEY);
@@ -129,12 +122,8 @@ export function init(behavior) {
 
   // When on a record page, watch for clicks within the App Launcher
   document.addEventListener('click', (e) => {
-    const onRecord = isRecordUrl(window.location.href);
-    const isLauncher = isAppLauncherClick(e);
-    console.log('[SLAE] appSwitchReturn click | onRecord:', onRecord, '| isLauncher:', isLauncher, '| path tags:', e.composedPath().map(el => el.tagName?.toLowerCase()).filter(Boolean).slice(0, 8));
-    if (!onRecord) return;
-    if (isLauncher) {
-      console.log('[SLAE] appSwitchReturn | setting PENDING_KEY');
+    if (!isRecordUrl(window.location.href)) return;
+    if (isAppLauncherClick(e)) {
       sessionStorage.setItem(PENDING_KEY, '1');
     }
   }, true);
