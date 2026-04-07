@@ -1,16 +1,18 @@
-function getSidCookie(url, callback) {
+function getSidCookie(url, tabUrl, callback) {
   const setupUrl = url.replace('salesforce.com', 'salesforce-setup.com');
   chrome.cookies.get({ url: setupUrl, name: 'sid' }, (cookie) => {
     if (cookie) { callback(cookie); return; }
-    // Fallback: on Lightning pages the sid cookie lives on the API domain
-    // (e.g. xxx.my.salesforce.com) before Setup has ever been visited.
-    chrome.cookies.get({ url, name: 'sid' }, callback);
+    // Fallback: on Lightning pages the sid cookie lives on the tab's domain
+    // (e.g. xxx.lightning.force.com), not on the API domain (xxx.my.salesforce.com).
+    chrome.cookies.get({ url: tabUrl || url, name: 'sid' }, callback);
   });
 }
 
-chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  const tabUrl = sender.tab?.url;
+
   if (message.action === 'fetchOrgId') {
-    getSidCookie(message.url, (cookie) => {
+    getSidCookie(message.url, tabUrl, (cookie) => {
       if (!cookie) {
         console.warn('[SLAE] No sid cookie found for', message.url);
         sendResponse({ id: null });
@@ -28,7 +30,7 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
   }
 
   if (message.action === 'fetchUsers') {
-    getSidCookie(message.url, (cookie) => {
+    getSidCookie(message.url, tabUrl, (cookie) => {
       if (!cookie) { sendResponse({ records: [] }); return; }
       fetch(message.url, {
         headers: { Authorization: `Bearer ${cookie.value}` },
@@ -41,7 +43,7 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
   }
 
   if (message.action === 'fetchFavorites') {
-    getSidCookie(message.baseUrl, (cookie) => {
+    getSidCookie(message.baseUrl, tabUrl, (cookie) => {
       if (!cookie) { sendResponse({ favorites: [] }); return; }
 
       fetch(`${message.baseUrl}/services/data/v59.0/ui-api/favorites`, {
