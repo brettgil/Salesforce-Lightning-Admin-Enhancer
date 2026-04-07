@@ -8,15 +8,8 @@ function isRecordUrl(url) {
 
 
 function saveRecord(url) {
-  console.log('[SLAE] saveRecord:', url);
-  const existing = JSON.parse(sessionStorage.getItem(LAST_RECORD_KEY) || '{}');
-  sessionStorage.setItem(LAST_RECORD_KEY, JSON.stringify({ url, name: existing.name || 'the previous record' }));
-
-  setTimeout(() => {
-    const name = document.title.split(' | ')[0].trim() || 'the previous record';
-    console.log('[SLAE] saveRecord timeout fires | url:', url, '| title name:', name, '| current LAST_RECORD:', sessionStorage.getItem(LAST_RECORD_KEY));
-    sessionStorage.setItem(LAST_RECORD_KEY, JSON.stringify({ url, name }));
-  }, 2000);
+  const name = document.title.split(' | ')[0].trim() || 'the previous record';
+  sessionStorage.setItem(LAST_RECORD_KEY, JSON.stringify({ url, name }));
 }
 
 function removeBanner() {
@@ -58,7 +51,6 @@ function showBanner(name, url) {
 
 function applyBehavior(behavior) {
   const saved = sessionStorage.getItem(LAST_RECORD_KEY);
-  console.log('[SLAE] applyBehavior | behavior:', behavior, '| saved:', saved);
   if (!saved) return;
 
   sessionStorage.removeItem(PENDING_KEY);
@@ -95,7 +87,7 @@ function whenReady(callback) {
 export function init(behavior) {
   const currentUrl = window.location.href;
 
-  // On fresh page load after an app switch: if pending and we didn't land on a record, apply behavior.
+  // On full page load after an app switch: if pending and not on a record, apply behavior.
   if (sessionStorage.getItem(PENDING_KEY)) {
     if (isRecordUrl(currentUrl)) {
       sessionStorage.removeItem(PENDING_KEY);
@@ -104,14 +96,9 @@ export function init(behavior) {
     }
   }
 
-  if (isRecordUrl(currentUrl)) {
-    saveRecord(currentUrl);
-  }
-
-  // App switches are soft navigations via pushState — handle them via slae-navigate.
+  // App switches are soft navigations — detect via slae-navigate and apply behavior.
   window.addEventListener('slae-navigate', (e) => {
     const url = e.detail?.url || window.location.href;
-    console.log('[SLAE] slae-navigate | url:', url, '| pending:', !!sessionStorage.getItem(PENDING_KEY), '| isRecord:', isRecordUrl(url));
     if (sessionStorage.getItem(PENDING_KEY)) {
       if (isRecordUrl(url)) {
         sessionStorage.removeItem(PENDING_KEY);
@@ -119,15 +106,14 @@ export function init(behavior) {
         whenReady(() => applyBehavior(behavior));
       }
     }
-    if (isRecordUrl(url)) {
-      saveRecord(url);
-    }
   });
 
-  // When on a record page, watch for clicks within the App Launcher
+  // When on a record page, save current URL at click time then mark as pending.
+  // We save immediately so the correct record is captured before navigation happens.
   document.addEventListener('click', (e) => {
     if (!isRecordUrl(window.location.href)) return;
     if (isAppLauncherClick(e)) {
+      saveRecord(window.location.href);
       sessionStorage.setItem(PENDING_KEY, '1');
     }
   }, true);
