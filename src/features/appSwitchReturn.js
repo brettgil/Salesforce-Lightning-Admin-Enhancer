@@ -111,10 +111,16 @@ export function init(behavior) {
   // When on a record page, save current URL at click time then mark as pending.
   // We save immediately so the correct record is captured before navigation happens.
   document.addEventListener('click', (e) => {
-    if (!isRecordUrl(window.location.href)) return;
-    if (isAppLauncherClick(e)) {
-      saveRecord(window.location.href);
+    const href = window.location.href;
+    const isLauncher = isAppLauncherClick(e);
+    if (isLauncher) {
+      console.log('[SLAE] waffle click | href:', href, '| isRecordUrl:', isRecordUrl(href));
+    }
+    if (!isRecordUrl(href)) return;
+    if (isLauncher) {
+      saveRecord(href);
       sessionStorage.setItem(PENDING_KEY, '1');
+      console.log('[SLAE] saved record + set PENDING:', href);
     }
   }, true);
 }
