@@ -9,6 +9,8 @@ function isRecordUrl(url) {
 
 function saveRecord(url) {
   const name = document.title.split(' | ')[0].trim() || 'the previous record';
+  console.log('[SLAE] saveRecord | url:', url, '| name:', name);
+  console.trace('[SLAE] saveRecord caller');
   sessionStorage.setItem(LAST_RECORD_KEY, JSON.stringify({ url, name }));
 }
 
@@ -51,6 +53,7 @@ function showBanner(name, url) {
 
 function applyBehavior(behavior) {
   const saved = sessionStorage.getItem(LAST_RECORD_KEY);
+  console.log('[SLAE] applyBehavior | saved:', saved);
   if (!saved) return;
 
   sessionStorage.removeItem(PENDING_KEY);
