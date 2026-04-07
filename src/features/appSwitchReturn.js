@@ -8,11 +8,13 @@ function isRecordUrl(url) {
 
 
 function saveRecord(url) {
+  console.log('[SLAE] saveRecord:', url);
   const existing = JSON.parse(sessionStorage.getItem(LAST_RECORD_KEY) || '{}');
   sessionStorage.setItem(LAST_RECORD_KEY, JSON.stringify({ url, name: existing.name || 'the previous record' }));
 
   setTimeout(() => {
     const name = document.title.split(' | ')[0].trim() || 'the previous record';
+    console.log('[SLAE] saveRecord timeout fires | url:', url, '| title name:', name, '| current LAST_RECORD:', sessionStorage.getItem(LAST_RECORD_KEY));
     sessionStorage.setItem(LAST_RECORD_KEY, JSON.stringify({ url, name }));
   }, 2000);
 }
@@ -56,6 +58,7 @@ function showBanner(name, url) {
 
 function applyBehavior(behavior) {
   const saved = sessionStorage.getItem(LAST_RECORD_KEY);
+  console.log('[SLAE] applyBehavior | behavior:', behavior, '| saved:', saved);
   if (!saved) return;
 
   sessionStorage.removeItem(PENDING_KEY);
@@ -108,6 +111,7 @@ export function init(behavior) {
   // App switches are soft navigations via pushState — handle them via slae-navigate.
   window.addEventListener('slae-navigate', (e) => {
     const url = e.detail?.url || window.location.href;
+    console.log('[SLAE] slae-navigate | url:', url, '| pending:', !!sessionStorage.getItem(PENDING_KEY), '| isRecord:', isRecordUrl(url));
     if (sessionStorage.getItem(PENDING_KEY)) {
       if (isRecordUrl(url)) {
         sessionStorage.removeItem(PENDING_KEY);
