@@ -1,6 +1,11 @@
 function getSidCookie(url, callback) {
   const setupUrl = url.replace('salesforce.com', 'salesforce-setup.com');
-  chrome.cookies.get({ url: setupUrl, name: 'sid' }, callback);
+  chrome.cookies.get({ url: setupUrl, name: 'sid' }, (cookie) => {
+    if (cookie) { callback(cookie); return; }
+    // Fallback: on Lightning pages the sid cookie lives on the API domain
+    // (e.g. xxx.my.salesforce.com) before Setup has ever been visited.
+    chrome.cookies.get({ url, name: 'sid' }, callback);
+  });
 }
 
 chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
