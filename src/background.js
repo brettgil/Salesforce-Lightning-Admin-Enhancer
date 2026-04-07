@@ -1,10 +1,17 @@
 function getSidCookie(url, tabUrl, callback) {
   const setupUrl = url.replace('salesforce.com', 'salesforce-setup.com');
+  console.log('[SLAE] getSidCookie — apiUrl:', url);
+  console.log('[SLAE] getSidCookie — setupUrl:', setupUrl);
+  console.log('[SLAE] getSidCookie — tabUrl:', tabUrl);
   chrome.cookies.get({ url: setupUrl, name: 'sid' }, (cookie) => {
+    console.log('[SLAE] setup sid cookie:', cookie ? `value="${cookie.value}" domain=${cookie.domain}` : 'NOT FOUND');
     if (cookie?.value) { callback(cookie); return; }
-    // Fallback: on Lightning pages the setup-domain sid cookie may be blank.
-    // The valid sid lives on the tab's domain (e.g. xxx.lightning.force.com).
-    chrome.cookies.get({ url: tabUrl || url, name: 'sid' }, callback);
+    const fallbackUrl = tabUrl || url;
+    console.log('[SLAE] falling back to:', fallbackUrl);
+    chrome.cookies.get({ url: fallbackUrl, name: 'sid' }, (cookie2) => {
+      console.log('[SLAE] fallback sid cookie:', cookie2 ? `value="${cookie2.value}" domain=${cookie2.domain}` : 'NOT FOUND');
+      callback(cookie2);
+    });
   });
 }
 
@@ -31,13 +38,21 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
   if (message.action === 'fetchUsers') {
     getSidCookie(message.url, tabUrl, (cookie) => {
-      if (!cookie) { sendResponse({ records: [] }); return; }
+      if (!cookie) {
+        console.warn('[SLAE] fetchUsers — no sid cookie found, returning empty');
+        sendResponse({ records: [] });
+        return;
+      }
+      console.log('[SLAE] fetchUsers — using sid from domain:', cookie.domain, '| value blank?', !cookie.value);
       fetch(message.url, {
         headers: { Authorization: `Bearer ${cookie.value}` },
       })
-        .then((res) => (res.ok ? res.json() : null))
+        .then((res) => {
+          console.log('[SLAE] fetchUsers — API response status:', res.status);
+          return res.ok ? res.json() : res.text().then(t => { console.warn('[SLAE] fetchUsers — API error body:', t); return null; });
+        })
         .then((data) => sendResponse({ records: data?.records ?? [] }))
-        .catch(() => sendResponse({ records: [] }));
+        .catch((e) => { console.error('[SLAE] fetchUsers — fetch error:', e); sendResponse({ records: [] }); });
     });
     return true;
   }
