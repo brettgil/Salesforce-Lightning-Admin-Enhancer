@@ -1,15 +1,20 @@
+function logAllSalesforceCookies() {
+  const domains = ['salesforce.com', 'force.com', 'salesforce-setup.com'];
+  domains.forEach(domain => {
+    chrome.cookies.getAll({ domain }, (cookies) => {
+      const summary = cookies.map(c => `${c.domain} | ${c.name}=${c.value ? c.value.slice(0,20)+'...' : '(blank)'}`);
+      console.log(`[SLAE] cookies for *.${domain}:`, summary);
+    });
+  });
+}
+
 function getSidCookie(url, tabUrl, callback) {
   const primaryUrl = tabUrl || url;
   const fallbackUrl = url.replace('salesforce.com', 'salesforce-setup.com');
-  console.log('[SLAE] getSidCookie primary:', primaryUrl);
+  logAllSalesforceCookies();
   chrome.cookies.get({ url: primaryUrl, name: 'sid' }, (cookie) => {
-    console.log('[SLAE] primary sid:', cookie ? `domain=${cookie.domain} value="${cookie.value.slice(0,20)}..."` : 'NOT FOUND');
     if (cookie?.value) { callback(cookie); return; }
-    console.log('[SLAE] getSidCookie fallback:', fallbackUrl);
-    chrome.cookies.get({ url: fallbackUrl, name: 'sid' }, (cookie2) => {
-      console.log('[SLAE] fallback sid:', cookie2 ? `domain=${cookie2.domain} value="${cookie2.value.slice(0,20)}..."` : 'NOT FOUND');
-      callback(cookie2);
-    });
+    chrome.cookies.get({ url: fallbackUrl, name: 'sid' }, callback);
   });
 }
 
