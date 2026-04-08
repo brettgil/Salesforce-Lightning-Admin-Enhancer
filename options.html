@@ -74,6 +74,26 @@
       line-height: 1.5;
     }
 
+    .header-links {
+      margin-top: 12px;
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .header-link {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--accent);
+      text-decoration: none;
+      opacity: 0.8;
+      transition: opacity 0.15s;
+    }
+
+    .header-link:hover {
+      opacity: 1;
+    }
+
     /* ── Section label ── */
     .section-label {
       font-family: 'Plus Jakarta Sans', sans-serif;
@@ -546,6 +566,10 @@
       <div class="header-eyebrow">Chrome Extension · Settings</div>
       <h1 class="header-title">Salesforce Lightning<br>Admin <span>Enhancer</span></h1>
       <p class="header-sub">Toggle features on or off. Save and reload your Salesforce page to apply changes.</p>
+      <div class="header-links">
+        <a href="features.html" class="header-link" target="_blank">Feature Tour →</a>
+        <a href="whats-new.html" class="header-link" target="_blank">What's New →</a>
+      </div>
     </header>
 
     <!-- Lightning -->

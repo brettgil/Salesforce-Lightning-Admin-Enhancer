@@ -31,59 +31,59 @@
       background-image: radial-gradient(circle, #1d2d45 1px, transparent 1px);
       background-size: 28px 28px;
       min-height: 100vh;
-      padding: 48px 20px 80px;
+      padding: 0 0 80px;
     }
 
-    .page {
-      max-width: 560px;
-      margin: 0 auto;
+    /* ── Hero ── */
+    .hero {
+      text-align: center;
+      padding: 64px 24px 56px;
+      border-bottom: 1px solid var(--border);
     }
 
-    /* ── Header ── */
-    .header {
-      margin-bottom: 48px;
-    }
-
-    .header-eyebrow {
+    .hero-eyebrow {
       font-size: 10px;
       font-weight: 600;
       letter-spacing: 0.2em;
       text-transform: uppercase;
       color: var(--accent);
-      margin-bottom: 8px;
+      margin-bottom: 16px;
     }
 
-    .header-title {
-      font-size: 28px;
+    .hero-title {
+      font-size: 36px;
       font-weight: 800;
-      letter-spacing: -0.02em;
+      letter-spacing: -0.03em;
       color: var(--text);
-      line-height: 1.15;
+      line-height: 1.1;
+      margin-bottom: 16px;
     }
 
-    .header-title span {
+    .hero-title span {
       color: var(--accent);
     }
 
-    .header-sub {
-      margin-top: 10px;
-      font-size: 13px;
+    .hero-sub {
+      font-size: 14px;
       color: var(--muted);
-      line-height: 1.6;
+      line-height: 1.7;
+      max-width: 480px;
+      margin: 0 auto 28px;
     }
 
-    .header-actions {
-      margin-top: 20px;
+    .hero-actions {
       display: flex;
+      justify-content: center;
       gap: 10px;
       flex-wrap: wrap;
     }
 
+    /* ── Buttons ── */
     .btn {
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      padding: 8px 16px;
+      padding: 9px 18px;
       border-radius: 6px;
       font-family: 'Plus Jakarta Sans', sans-serif;
       font-size: 12px;
@@ -107,9 +107,16 @@
       border: 1px solid var(--border);
     }
 
+    /* ── Page ── */
+    .page {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 56px 24px 0;
+    }
+
     /* ── Release block ── */
     .release {
-      margin-bottom: 40px;
+      margin-bottom: 48px;
     }
 
     .release-header {
@@ -120,13 +127,13 @@
     }
 
     .release-version {
-      font-size: 13px;
+      font-size: 15px;
       font-weight: 700;
       color: var(--text);
     }
 
     .release-date {
-      font-size: 11px;
+      font-size: 12px;
       color: var(--muted);
     }
 
@@ -152,22 +159,23 @@
     .change-list {
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 10px;
     }
 
     .change-card {
       background: var(--surface);
       border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 14px 18px;
+      border-radius: 12px;
+      padding: 20px 24px;
       display: flex;
       align-items: flex-start;
-      gap: 14px;
-      transition: border-color 0.2s;
+      gap: 16px;
+      transition: border-color 0.2s, box-shadow 0.2s;
     }
 
     .change-card:hover {
       border-color: #2a3d5a;
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
     }
 
     .change-card.highlight {
@@ -176,7 +184,7 @@
     }
 
     .change-icon {
-      font-size: 16px;
+      font-size: 22px;
       flex-shrink: 0;
       margin-top: 1px;
       line-height: 1;
@@ -188,16 +196,17 @@
     }
 
     .change-label {
-      font-size: 13px;
-      font-weight: 600;
+      font-size: 15px;
+      font-weight: 700;
       color: var(--text);
-      margin-bottom: 3px;
+      margin-bottom: 4px;
+      letter-spacing: -0.01em;
     }
 
     .change-desc {
-      font-size: 12px;
+      font-size: 13px;
       color: var(--muted);
-      line-height: 1.55;
+      line-height: 1.65;
     }
 
     .change-tag {
@@ -208,7 +217,7 @@
       padding: 2px 6px;
       border-radius: 3px;
       flex-shrink: 0;
-      margin-top: 2px;
+      margin-top: 4px;
     }
 
     .tag-feature  { background: rgba(14, 165, 233, 0.12); color: var(--accent); border: 1px solid rgba(14, 165, 233, 0.25); }
@@ -222,7 +231,7 @@
       letter-spacing: 0.18em;
       text-transform: uppercase;
       color: var(--muted);
-      margin: 32px 0 12px;
+      margin: 48px 0 16px;
       display: flex;
       align-items: center;
       gap: 10px;
@@ -237,12 +246,12 @@
 
     /* ── Footer ── */
     .footer {
-      margin-top: 48px;
-      padding-top: 24px;
+      margin-top: 64px;
+      padding: 32px 24px;
       border-top: 1px solid var(--border);
       font-size: 11px;
       color: var(--muted);
-      line-height: 1.6;
+      line-height: 1.7;
       text-align: center;
     }
 
@@ -257,18 +266,21 @@
   </style>
 </head>
 <body>
+
+  <!-- Hero -->
+  <div class="hero">
+    <div class="hero-eyebrow">Salesforce Lightning Admin Enhancer</div>
+    <h1 class="hero-title">What's <span>New</span></h1>
+    <p class="hero-sub">Release notes for the latest updates. All features can be toggled individually from the options page.</p>
+    <div class="hero-actions">
+      <a href="features.html" class="btn btn-ghost" target="_blank">Feature Tour</a>
+      <a href="https://github.com/brettgil/salesforce-lightning-admin-enhancer/releases" class="btn btn-ghost" target="_blank">View All Releases</a>
+    </div>
+  </div>
+
   <div class="page">
 
-    <header class="header">
-      <div class="header-eyebrow">Salesforce Lightning Admin Enhancer</div>
-      <h1 class="header-title">What's <span>New</span></h1>
-      <p class="header-sub">Release notes for the latest updates. All features can be toggled individually from the options page.</p>
-      <div class="header-actions">
-        <a href="https://github.com/brettgil/salesforce-lightning-admin-enhancer/releases" class="btn btn-ghost" target="_blank">View All Releases</a>
-      </div>
-    </header>
-
-    <!-- v2.9.4 -->
+    <!-- v2.10.0 -->
     <div class="release">
       <div class="release-header">
         <span class="release-version">v2.10.0</span>
@@ -449,11 +461,12 @@
       </div>
     </div>
 
-    <footer class="footer">
-      <p>Salesforce Lightning Admin Enhancer &mdash; <a href="https://github.com/brettgil/salesforce-lightning-admin-enhancer" target="_blank">GitHub</a> &mdash; All features toggle individually from the options page.</p>
-    </footer>
-
   </div>
+
+  <footer class="footer">
+    <p>Salesforce Lightning Admin Enhancer &mdash; <a href="https://github.com/brettgil/salesforce-lightning-admin-enhancer" target="_blank">GitHub</a></p>
+  </footer>
+
   <script src="whats-new.js"></script>
 </body>
 </html>

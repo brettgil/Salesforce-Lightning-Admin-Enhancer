@@ -2,7 +2,7 @@
 
 Productivity enhancements for Salesforce Lightning admins. Record lookup by ID, Setup shortcuts, Quick Find improvements, and more.
 
-All features can be toggled on or off individually from the extension options page.
+All features can be toggled on or off individually from the extension options page. When the extension updates, a badge appears on the toolbar icon and a What's New page opens automatically. A full Feature Tour is accessible from both the options page and the What's New page.
 
 ---
 
