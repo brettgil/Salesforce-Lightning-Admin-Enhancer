@@ -1,14 +1,8 @@
-const LAST_RECORD_KEY = 'slae-last-record';
-const PENDING_KEY = 'slae-app-switch-pending';
+const LAST_RECORD_KEY = 'slae-app-last-record';
 const BANNER_ID = 'slae-app-switch-banner';
 
 function isRecordUrl(url) {
   return /\/lightning\/r\/[^/]+\/[^/]+\/(view|edit)/.test(url);
-}
-
-function saveRecord(url) {
-  const name = document.title.split(' | ')[0].trim() || 'the previous record';
-  sessionStorage.setItem(LAST_RECORD_KEY, JSON.stringify({ url, name }));
 }
 
 function removeBanner() {
@@ -51,10 +45,8 @@ function showBanner(name, url) {
 function applyBehavior(behavior) {
   const saved = sessionStorage.getItem(LAST_RECORD_KEY);
   if (!saved) return;
-
-  sessionStorage.removeItem(PENDING_KEY);
+  sessionStorage.removeItem(LAST_RECORD_KEY);
   const { url, name } = JSON.parse(saved);
-
   if (behavior === 'auto') {
     window.location.assign(url);
   } else if (behavior === 'banner') {
@@ -62,17 +54,9 @@ function applyBehavior(behavior) {
   }
 }
 
-function isAppLauncherClick(e) {
-  return e.composedPath().some((el) => {
-    const tag = el.tagName?.toLowerCase() || '';
-    return tag.startsWith('one-app-launcher') || tag === 'runtime_platform_app_launcher-app-launcher-bar';
-  });
-}
-
 function whenReady(callback) {
   const el = document.querySelector('.slds-global-header, .oneGlobalHeader, .slds-icon-waffle');
   if (el) { callback(); return; }
-
   const observer = new MutationObserver(() => {
     const ready = document.querySelector('.slds-global-header, .oneGlobalHeader, .slds-icon-waffle');
     if (ready) { observer.disconnect(); callback(); }
@@ -81,35 +65,23 @@ function whenReady(callback) {
 }
 
 export function init(behavior) {
-  const currentUrl = window.location.href;
-
-  // On page load after an app switch: apply behavior if pending and not on a record.
-  if (sessionStorage.getItem(PENDING_KEY)) {
-    if (isRecordUrl(currentUrl)) {
-      sessionStorage.removeItem(PENDING_KEY);
-    } else {
+  // On page load: if a record was saved before an app switch, apply behavior.
+  if (sessionStorage.getItem(LAST_RECORD_KEY)) {
+    if (!isRecordUrl(window.location.href)) {
       whenReady(() => applyBehavior(behavior));
+    } else {
+      // Landed on a record directly — clear it
+      sessionStorage.removeItem(LAST_RECORD_KEY);
     }
   }
 
-  // Always keep LAST_RECORD_KEY current for whatever record page we're on.
-  if (isRecordUrl(currentUrl)) {
-    saveRecord(currentUrl);
-  }
-
-  // Also update on soft navigations to record pages within the same app.
-  window.addEventListener('slae-navigate', (e) => {
-    const url = e.detail?.url || window.location.href;
-    if (isRecordUrl(url)) {
-      saveRecord(url);
-    }
-  });
-
-  // When the waffle is clicked, mark as pending. Record is already up to date.
+  // Listen for clicks on app launcher items (a.al-menu-item with /lightning/app/ href).
+  // When an app is selected, save the current page URL so we can return to it.
   document.addEventListener('click', (e) => {
+    const link = e.target.closest('a.al-menu-item[href^="/lightning/app/"]');
+    if (!link) return;
     if (!isRecordUrl(window.location.href)) return;
-    if (isAppLauncherClick(e)) {
-      sessionStorage.setItem(PENDING_KEY, '1');
-    }
+    const name = document.title.split(' | ')[0].trim() || 'the previous record';
+    sessionStorage.setItem(LAST_RECORD_KEY, JSON.stringify({ url: window.location.href, name }));
   }, true);
 }
