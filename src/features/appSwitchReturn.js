@@ -6,11 +6,8 @@ function isRecordUrl(url) {
   return /\/lightning\/r\/[^/]+\/[^/]+\/(view|edit)/.test(url);
 }
 
-
 function saveRecord(url) {
   const name = document.title.split(' | ')[0].trim() || 'the previous record';
-  console.log('[SLAE] saveRecord | url:', url, '| name:', name);
-  console.trace('[SLAE] saveRecord caller');
   sessionStorage.setItem(LAST_RECORD_KEY, JSON.stringify({ url, name }));
 }
 
@@ -53,7 +50,6 @@ function showBanner(name, url) {
 
 function applyBehavior(behavior) {
   const saved = sessionStorage.getItem(LAST_RECORD_KEY);
-  console.log('[SLAE] applyBehavior | saved:', saved);
   if (!saved) return;
 
   sessionStorage.removeItem(PENDING_KEY);
@@ -67,7 +63,6 @@ function applyBehavior(behavior) {
 }
 
 function isAppLauncherClick(e) {
-  // composedPath pierces shadow DOM — check if any ancestor tag suggests app launcher
   return e.composedPath().some((el) => {
     const tag = el.tagName?.toLowerCase() || '';
     return tag.startsWith('one-app-launcher') || tag === 'runtime_platform_app_launcher-app-launcher-bar';
@@ -75,8 +70,6 @@ function isAppLauncherClick(e) {
 }
 
 function whenReady(callback) {
-  // Wait for Salesforce's global header to exist before injecting the banner,
-  // so it doesn't get wiped out by the framework's initial render.
   const el = document.querySelector('.slds-global-header, .oneGlobalHeader, .slds-icon-waffle');
   if (el) { callback(); return; }
 
@@ -90,7 +83,7 @@ function whenReady(callback) {
 export function init(behavior) {
   const currentUrl = window.location.href;
 
-  // On full page load after an app switch: if pending and not on a record, apply behavior.
+  // On page load after an app switch: apply behavior if pending and not on a record.
   if (sessionStorage.getItem(PENDING_KEY)) {
     if (isRecordUrl(currentUrl)) {
       sessionStorage.removeItem(PENDING_KEY);
@@ -99,31 +92,24 @@ export function init(behavior) {
     }
   }
 
-  // App switches are soft navigations — detect via slae-navigate and apply behavior.
+  // Always keep LAST_RECORD_KEY current for whatever record page we're on.
+  if (isRecordUrl(currentUrl)) {
+    saveRecord(currentUrl);
+  }
+
+  // Also update on soft navigations to record pages within the same app.
   window.addEventListener('slae-navigate', (e) => {
     const url = e.detail?.url || window.location.href;
-    if (sessionStorage.getItem(PENDING_KEY)) {
-      if (isRecordUrl(url)) {
-        sessionStorage.removeItem(PENDING_KEY);
-      } else {
-        whenReady(() => applyBehavior(behavior));
-      }
+    if (isRecordUrl(url)) {
+      saveRecord(url);
     }
   });
 
-  // When on a record page, save current URL at click time then mark as pending.
-  // We save immediately so the correct record is captured before navigation happens.
+  // When the waffle is clicked, mark as pending. Record is already up to date.
   document.addEventListener('click', (e) => {
-    const href = window.location.href;
-    const isLauncher = isAppLauncherClick(e);
-    if (isLauncher) {
-      console.log('[SLAE] waffle click | href:', href, '| isRecordUrl:', isRecordUrl(href));
-    }
-    if (!isRecordUrl(href)) return;
-    if (isLauncher) {
-      saveRecord(href);
+    if (!isRecordUrl(window.location.href)) return;
+    if (isAppLauncherClick(e)) {
       sessionStorage.setItem(PENDING_KEY, '1');
-      console.log('[SLAE] saved record + set PENDING:', href);
     }
   }, true);
 }
