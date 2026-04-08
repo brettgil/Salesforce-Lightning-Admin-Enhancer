@@ -1,3 +1,27 @@
+chrome.runtime.onInstalled.addListener(({ reason }) => {
+  if (reason !== 'install' && reason !== 'update') return;
+
+  const manifest = chrome.runtime.getManifest();
+  const currentVersion = manifest.version;
+
+  chrome.storage.local.get({ lastSeenVersion: null }, ({ lastSeenVersion }) => {
+    if (lastSeenVersion === currentVersion) return;
+
+    chrome.action.setBadgeText({ text: 'N' });
+    chrome.action.setBadgeBackgroundColor({ color: '#0176d3' });
+
+    chrome.tabs.create({ url: chrome.runtime.getURL('whats-new.html') });
+  });
+});
+
+chrome.runtime.onMessage.addListener((message) => {
+  if (message.action === 'clearWhatsNewBadge') {
+    const currentVersion = chrome.runtime.getManifest().version;
+    chrome.action.setBadgeText({ text: '' });
+    chrome.storage.local.set({ lastSeenVersion: currentVersion });
+  }
+});
+
 function getSidCookie(url, tabUrl, callback) {
   // The my.salesforce.com sid is the valid API session — always try it first.
   // The setup and lightning domain sids are UI sessions rejected by the REST API.

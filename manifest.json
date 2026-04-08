@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Salesforce Lightning Admin Enhancer",
   "description": "Salesforce Admin Enhancer for Lightning",
-  "version": "2.9.4",
+  "version": "2.10.0",
 
   "icons": {
     "16": "lightning_stylized_icon__1__icon.png",
@@ -14,7 +14,7 @@
     "service_worker": "src/background.js"
   },
 
-  "permissions": ["storage", "cookies"],
+  "permissions": ["storage", "cookies", "tabs"],
 
   "host_permissions": [
     "*://*.lightning.force.com/*",

@@ -276,7 +276,10 @@ function restoreOptions() {
   });
 }
 
-document.addEventListener('DOMContentLoaded', restoreOptions);
+document.addEventListener('DOMContentLoaded', () => {
+  restoreOptions();
+  chrome.runtime.sendMessage({ action: 'clearWhatsNewBadge' });
+});
 document.getElementById('save').addEventListener('click', saveOptions);
 document.getElementById('nav-fav-add-btn').addEventListener('click', addFav);
 document.getElementById('nav-fav-url').addEventListener('keydown', (e) => {

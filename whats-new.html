@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>What's New — Salesforce Lightning Admin Enhancer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:          #090e1a;
+      --surface:     #0f1624;
+      --surface-2:   #162033;
+      --border:      #1d2d45;
+      --accent:      #0ea5e9;
+      --accent-sf:   #0176d3;
+      --accent-glow: rgba(14, 165, 233, 0.15);
+      --text:        #e8edf5;
+      --muted:       #6b7fa3;
+      --success:     #10b981;
+      --new:         #f59e0b;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 14px;
+      color: var(--text);
+      background-color: var(--bg);
+      background-image: radial-gradient(circle, #1d2d45 1px, transparent 1px);
+      background-size: 28px 28px;
+      min-height: 100vh;
+      padding: 48px 20px 80px;
+    }
+
+    .page {
+      max-width: 560px;
+      margin: 0 auto;
+    }
+
+    /* ── Header ── */
+    .header {
+      margin-bottom: 48px;
+    }
+
+    .header-eyebrow {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 8px;
+    }
+
+    .header-title {
+      font-size: 28px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: var(--text);
+      line-height: 1.15;
+    }
+
+    .header-title span {
+      color: var(--accent);
+    }
+
+    .header-sub {
+      margin-top: 10px;
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .header-actions {
+      margin-top: 20px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      text-decoration: none;
+      transition: opacity 0.15s;
+    }
+
+    .btn:hover { opacity: 0.85; }
+
+    .btn-primary {
+      background: var(--accent-sf);
+      color: #fff;
+    }
+
+    .btn-ghost {
+      background: var(--surface);
+      color: var(--muted);
+      border: 1px solid var(--border);
+    }
+
+    /* ── Release block ── */
+    .release {
+      margin-bottom: 40px;
+    }
+
+    .release-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .release-version {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .release-date {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .badge-new {
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--new);
+      background: rgba(245, 158, 11, 0.12);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+      border-radius: 4px;
+      padding: 2px 7px;
+    }
+
+    .release-divider {
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    /* ── Change items ── */
+    .change-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .change-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px 18px;
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      transition: border-color 0.2s;
+    }
+
+    .change-card:hover {
+      border-color: #2a3d5a;
+    }
+
+    .change-card.highlight {
+      border-color: rgba(14, 165, 233, 0.3);
+      background: linear-gradient(135deg, var(--surface) 0%, rgba(14, 165, 233, 0.04) 100%);
+    }
+
+    .change-icon {
+      font-size: 16px;
+      flex-shrink: 0;
+      margin-top: 1px;
+      line-height: 1;
+    }
+
+    .change-body {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .change-label {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 3px;
+    }
+
+    .change-desc {
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    .change-tag {
+      font-size: 9px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 2px 6px;
+      border-radius: 3px;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .tag-feature  { background: rgba(14, 165, 233, 0.12); color: var(--accent); border: 1px solid rgba(14, 165, 233, 0.25); }
+    .tag-fix      { background: rgba(16, 185, 129, 0.1);  color: var(--success); border: 1px solid rgba(16, 185, 129, 0.25); }
+    .tag-internal { background: rgba(107, 127, 163, 0.1); color: var(--muted);   border: 1px solid rgba(107, 127, 163, 0.2); }
+
+    /* ── Section label ── */
+    .section-label {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin: 32px 0 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .section-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    /* ── Footer ── */
+    .footer {
+      margin-top: 48px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border);
+      font-size: 11px;
+      color: var(--muted);
+      line-height: 1.6;
+      text-align: center;
+    }
+
+    .footer a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    .footer a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+
+    <header class="header">
+      <div class="header-eyebrow">Salesforce Lightning Admin Enhancer</div>
+      <h1 class="header-title">What's <span>New</span></h1>
+      <p class="header-sub">Release notes for the latest updates. All features can be toggled individually from the options page.</p>
+      <div class="header-actions">
+        <a href="https://github.com/brettgil/salesforce-lightning-admin-enhancer/releases" class="btn btn-ghost" target="_blank">View All Releases</a>
+      </div>
+    </header>
+
+    <!-- v2.9.4 -->
+    <div class="release">
+      <div class="release-header">
+        <span class="release-version">v2.10.0</span>
+        <span class="badge-new">Latest</span>
+        <span class="release-date">April 2026</span>
+        <div class="release-divider"></div>
+      </div>
+      <div class="change-list">
+        <div class="change-card highlight">
+          <span class="change-icon">🎉</span>
+          <div class="change-body">
+            <div class="change-label">What's New page</div>
+            <div class="change-desc">When the extension updates, a badge appears on the toolbar icon and this page opens automatically — so you never miss what changed.</div>
+          </div>
+          <span class="change-tag tag-feature">Feature</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- v2.9.4 -->
+    <div class="release">
+      <div class="release-header">
+        <span class="release-version">v2.9.4</span>
+        <span class="release-date">April 2026</span>
+        <div class="release-divider"></div>
+      </div>
+      <div class="change-list">
+        <div class="change-card">
+          <span class="change-icon">↩️</span>
+          <div class="change-body">
+            <div class="change-label">App Switcher Return — rewritten</div>
+            <div class="change-desc">Fixed App Switcher Return not working. The previous implementation relied on shadow DOM traversal and History API patching — neither of which Salesforce's LWC router uses. Rewrote to listen directly on app launcher links, saving the current URL at click time so the return always lands on the right record.</div>
+          </div>
+          <span class="change-tag tag-fix">Fix</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- v2.9.3 -->
+    <div class="release">
+      <div class="release-header">
+        <span class="release-version">v2.9.3</span>
+        <span class="release-date">April 2026</span>
+        <div class="release-divider"></div>
+      </div>
+      <div class="change-list">
+        <div class="change-card">
+          <span class="change-icon">🔍</span>
+          <div class="change-body">
+            <div class="change-label">User Search — Lightning fix</div>
+            <div class="change-desc">Fixed User Search returning no results on Lightning pages when Setup hadn't been visited first. The extension was using the wrong session cookie domain — Salesforce's REST API only accepts the my.salesforce.com session. Now always tries the correct API domain first.</div>
+          </div>
+          <span class="change-tag tag-fix">Fix</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- v2.9.0 – 2.9.2 -->
+    <div class="release">
+      <div class="release-header">
+        <span class="release-version">v2.9.0 – 2.9.2</span>
+        <span class="release-date">April 2026</span>
+        <div class="release-divider"></div>
+      </div>
+      <div class="change-list">
+        <div class="change-card">
+          <span class="change-icon">🔍</span>
+          <div class="change-body">
+            <div class="change-label">User Search</div>
+            <div class="change-desc">Search for any user by name, username, or email — including deactivated users Salesforce's built-in search ignores. Results include an active/inactive badge and link directly to the user record. Available in both Lightning and Setup.</div>
+          </div>
+          <span class="change-tag tag-feature">Feature</span>
+        </div>
+        <div class="change-card">
+          <span class="change-icon">🛡️</span>
+          <div class="change-body">
+            <div class="change-label">Stability improvements</div>
+            <div class="change-desc">Features now fail in isolation — if one encounters an error it no longer affects others. Guards added against invalidated extension context.</div>
+          </div>
+          <span class="change-tag tag-fix">Fix</span>
+        </div>
+        <div class="change-card">
+          <span class="change-icon">📌</span>
+          <div class="change-body">
+            <div class="change-label">User Search tooltip clipping</div>
+            <div class="change-desc">Fixed tooltip clipping at the top of the viewport when the search button appears near the top of the page.</div>
+          </div>
+          <span class="change-tag tag-fix">Fix</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-label">All Features</div>
+    <div class="change-list">
+      <div class="change-card">
+        <span class="change-icon">⚡</span>
+        <div class="change-body">
+          <div class="change-label">Clickable Logo</div>
+          <div class="change-desc">Makes the Salesforce logo in the Lightning header open your home page in a new tab.</div>
+        </div>
+      </div>
+      <div class="change-card">
+        <span class="change-icon">🔗</span>
+        <div class="change-body">
+          <div class="change-label">Launch by ID</div>
+          <div class="change-desc">Paste any 15 or 18-digit record ID next to the search bar and press Enter to navigate directly to that record.</div>
+        </div>
+      </div>
+      <div class="change-card">
+        <span class="change-icon">↩️</span>
+        <div class="change-body">
+          <div class="change-label">App Switcher Return</div>
+          <div class="change-desc">Remembers the record you were viewing when switching apps, and returns you to it automatically or via a banner.</div>
+        </div>
+      </div>
+      <div class="change-card">
+        <span class="change-icon">👤</span>
+        <div class="change-body">
+          <div class="change-label">Login As Return</div>
+          <div class="change-desc">After ending a Login As session, automatically returns you to that user's detail page instead of the Users list.</div>
+        </div>
+      </div>
+      <div class="change-card">
+        <span class="change-icon">🪪</span>
+        <div class="change-body">
+          <div class="change-label">Record ID Display</div>
+          <div class="change-desc">Shows the current record ID in the Lightning header — click to copy.</div>
+        </div>
+      </div>
+      <div class="change-card">
+        <span class="change-icon">🏢</span>
+        <div class="change-body">
+          <div class="change-label">Org ID Display</div>
+          <div class="change-desc">Displays your 18-digit Org ID in the Setup header — click to copy.</div>
+        </div>
+      </div>
+      <div class="change-card">
+        <span class="change-icon">🔎</span>
+        <div class="change-body">
+          <div class="change-label">Quick Find Layout &amp; Focus</div>
+          <div class="change-desc">Moves the Quick Find field to the left in Object Manager, and auto-focuses it when Setup loads so you can start typing immediately.</div>
+        </div>
+      </div>
+      <div class="change-card">
+        <span class="change-icon">⭐</span>
+        <div class="change-body">
+          <div class="change-label">Setup Favorites</div>
+          <div class="change-desc">Adds the native Salesforce favorites star and dropdown to Setup pages.</div>
+        </div>
+      </div>
+      <div class="change-card">
+        <span class="change-icon">📌</span>
+        <div class="change-body">
+          <div class="change-label">My Setup Shortcuts</div>
+          <div class="change-desc">Configurable shortcut links in the Setup sidebar. Pin any Setup page with one click; reorder via drag-and-drop.</div>
+        </div>
+      </div>
+      <div class="change-card">
+        <span class="change-icon">⚙️</span>
+        <div class="change-body">
+          <div class="change-label">Process Builder Enhancements</div>
+          <div class="change-desc">Resizable panels, one-click copy buttons, and full API names in field selection modals.</div>
+        </div>
+      </div>
+      <div class="change-card">
+        <span class="change-icon">🔍</span>
+        <div class="change-body">
+          <div class="change-label">User Search</div>
+          <div class="change-desc">Search any user by name, username, or email — including deactivated users. Available in both Lightning and Setup.</div>
+        </div>
+      </div>
+      <div class="change-card">
+        <span class="change-icon">📋</span>
+        <div class="change-body">
+          <div class="change-label">Snippets</div>
+          <div class="change-desc">Store frequently used formulas, SOQL queries, and notes. One-click copy from anywhere.</div>
+        </div>
+      </div>
+    </div>
+
+    <footer class="footer">
+      <p>Salesforce Lightning Admin Enhancer &mdash; <a href="https://github.com/brettgil/salesforce-lightning-admin-enhancer" target="_blank">GitHub</a> &mdash; All features toggle individually from the options page.</p>
+    </footer>
+
+  </div>
+  <script src="whats-new.js"></script>
+</body>
+</html>
