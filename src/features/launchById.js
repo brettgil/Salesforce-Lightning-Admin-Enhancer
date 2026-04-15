@@ -1,22 +1,40 @@
 import { onElement } from '../utils/observer.js';
 
-const SFID_PATTERN = /^[a-zA-Z0-9]{15}$|^[a-zA-Z0-9]{18}$/;
-
-function isValidSalesforceId(value) {
-  return SFID_PATTERN.test(value.trim());
-}
+const BARE_ID_PATTERN = /^[a-zA-Z0-9]{15}$|^[a-zA-Z0-9]{18}$/;
 
 function navigate(input, error) {
-  const id = input.value.trim();
+  const value = input.value.trim();
 
-  if (!isValidSalesforceId(id)) {
-    error.textContent = 'Invalid ID';
-    error.classList.add('slae-launch-error--visible');
+  // Full URL — strip hostname, navigate the path+query+hash on the current org
+  if (value.includes('://')) {
+    try {
+      const url = new URL(value);
+      error.classList.remove('slae-launch-error--visible');
+      window.location.assign(url.pathname + url.search + url.hash);
+      return;
+    } catch {
+      error.textContent = 'Invalid URL';
+      error.classList.add('slae-launch-error--visible');
+      return;
+    }
+  }
+
+  // Relative path — navigate directly
+  if (value.startsWith('/')) {
+    error.classList.remove('slae-launch-error--visible');
+    window.location.assign(value);
     return;
   }
 
-  error.classList.remove('slae-launch-error--visible');
-  window.location.assign('/' + id);
+  // Bare ID
+  if (BARE_ID_PATTERN.test(value)) {
+    error.classList.remove('slae-launch-error--visible');
+    window.location.assign('/' + value);
+    return;
+  }
+
+  error.textContent = 'Invalid ID';
+  error.classList.add('slae-launch-error--visible');
 }
 
 export function init() {
@@ -29,7 +47,7 @@ export function init() {
 
     const input = document.createElement('input');
     input.type = 'text';
-    input.placeholder = 'Record ID';
+    input.placeholder = 'Record ID or URL';
     input.className = 'slae-launch-input';
 
     const button = document.createElement('button');

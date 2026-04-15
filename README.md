@@ -14,7 +14,7 @@ All features can be toggled on or off individually from the extension options pa
 The Salesforce logo in the Lightning header does nothing by default. This feature makes it clickable — opening your Lightning home page in a new tab. A small change that saves time when you need to quickly jump back to home without losing what you're working on.
 
 **Launch by ID**
-Adds a record ID input field next to the Lightning search bar. Paste any 15 or 18-digit Salesforce record ID and press Enter to navigate directly to that record. Useful when you have an ID from a support case, a data export, a debug log, or a URL shared by a colleague — no searching required.
+Adds an input field next to the Lightning search bar. Paste any 15 or 18-digit Salesforce record ID, a relative path, or a full Salesforce URL and press Enter to navigate directly to that record. When a full URL is pasted, the hostname is stripped so the destination opens in your current org — useful when moving from production to sandbox for the same record.
 
 **App Switcher Return**
 When you switch apps using the Salesforce App Launcher, you're dropped on the new app's home page and lose your place. With this feature enabled, the extension remembers the record you were viewing and either automatically redirects you back to it, or shows a dismissible banner with a link. Choose your preferred behavior — auto-redirect or show prompt — from the options page.
