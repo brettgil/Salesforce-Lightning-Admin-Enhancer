@@ -28,7 +28,7 @@ Shows the current record ID in the Lightning header on any record page — click
 ### Setup
 
 **Org ID Display**
-Displays your organization's 18-digit Org ID directly in the Setup header. Click it to copy to clipboard. Saves you from having to navigate to Company Information every time you need your Org ID for a support ticket, API configuration, connected app setup, or package installation.
+Displays your organization's 18-digit Org ID in the Setup header — click to copy. On Setup pages that show a specific record (such as a user, permission set, or channel), the header switches to show the Record ID instead. Falls back to the Org ID on pages with no record context.
 
 **Quick Find Layout**
 In the Object Manager, the Quick Find filter is positioned on the right side of the header, pushing it away from the list you're filtering. This feature moves it to the left side of the header, keeping it visually aligned with the content below. Also applies to Object Manager detail pages such as Fields & Relationships and Page Layouts.
