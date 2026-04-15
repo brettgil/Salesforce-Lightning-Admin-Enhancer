@@ -25,6 +25,9 @@ When an admin logs out of a Login As session, Salesforce returns them to the Use
 **Record ID Display**
 Shows the current record ID in the Lightning header on any record page — click to copy to clipboard. Updates automatically as you navigate between records.
 
+**Field API Name**
+Right-click any field on a Lightning record page to show its API name directly below the field label. Right-click the field again to hide it. Useful for building formulas, writing SOQL, or debugging field mappings without leaving the record.
+
 ### Setup
 
 **Org ID Display**

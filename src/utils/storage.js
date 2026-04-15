@@ -18,6 +18,7 @@ const DEFAULTS = {
   loginAsReturn: true,
   recordIdHeader: true,
   userSearch: true,
+  fieldApiName: true,
 };
 
 /**

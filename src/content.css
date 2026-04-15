@@ -525,5 +525,12 @@
   border-bottom-color: var(--slds-g-color-surface-container-inverse-1, #16325c);
 }
 
+/* --- Field API Name --- */
+.slae-field-api-name {
+  font-size: 11px;
+  color: #747474;
+  font-style: italic;
+}
+
 /* --- Process Builder Enhancements --- */
 /* Styles are applied inline to match Salesforce's dynamic layout */
