@@ -68,7 +68,11 @@ function buildWidget() {
   }
 
   function setStatus(msg) {
-    results.innerHTML = `<div class="slae-user-search-status">${msg}</div>`;
+    results.innerHTML = '';
+    const div = document.createElement('div');
+    div.className = 'slae-user-search-status';
+    div.textContent = msg;
+    results.appendChild(div);
   }
 
   function renderResults(users) {
