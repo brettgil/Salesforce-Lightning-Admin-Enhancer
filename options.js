@@ -238,6 +238,7 @@ function saveOptions() {
   }
   settings.navFavoritesLinks = JSON.stringify(linksObj, null, 2);
   settings.appSwitchBehavior = document.getElementById('appSwitchBehavior').value;
+  settings.userSearchDestination = document.getElementById('userSearchDestination').value;
 
   chrome.storage.sync.set(settings, () => {
     const status = document.getElementById('status');
@@ -247,7 +248,7 @@ function saveOptions() {
 }
 
 function restoreOptions() {
-  const defaults = { ...CHECKBOX_DEFAULTS, navFavoritesLinks: DEFAULT_NAV_FAV_LINKS, appSwitchBehavior: 'off' };
+  const defaults = { ...CHECKBOX_DEFAULTS, navFavoritesLinks: DEFAULT_NAV_FAV_LINKS, appSwitchBehavior: 'off', userSearchDestination: 'setup' };
 
   chrome.storage.sync.get(defaults, (settings) => {
     for (const [key, value] of Object.entries(settings)) {

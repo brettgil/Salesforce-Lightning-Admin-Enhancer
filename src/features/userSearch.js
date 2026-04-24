@@ -27,7 +27,12 @@ function searchUsers(query) {
   });
 }
 
-function buildWidget() {
+function userHref(userId, destination) {
+  if (destination === 'record') return `/lightning/r/User/${userId}/view`;
+  return `/lightning/setup/ManageUsers/page?address=%2F${userId}%3Fnoredirect%3D1%26isUserEntityOverride%3D1`;
+}
+
+function buildWidget(destination) {
   const wrapper = document.createElement('div');
   wrapper.id = ELEMENT_ID;
   wrapper.className = 'slae-user-search';
@@ -85,7 +90,7 @@ function buildWidget() {
     users.forEach((user) => {
       const row = document.createElement('a');
       row.className = 'slae-user-result';
-      row.href = `/lightning/r/User/${user.Id}/view`;
+      row.href = userHref(user.Id, destination);
 
       const info = document.createElement('div');
       info.className = 'slae-user-result-info';
@@ -168,13 +173,13 @@ function buildWidget() {
   return wrapper;
 }
 
-export function init() {
+export function init(destination = 'setup') {
   // Setup: inject after the bordered content wrapper, inside the search container
   onElement('.forceSearchInputDesktop', (el) => {
     if (el.querySelector(`#${ELEMENT_ID}`)) return;
     const contentWrapper = el.querySelector('.contentWrapper');
     if (!contentWrapper) return;
-    contentWrapper.after(buildWidget());
+    contentWrapper.after(buildWidget(destination));
   });
 
   // Lightning: inject inside the div wrapping the search button so right:0 aligns to the input edge
@@ -183,6 +188,6 @@ export function init() {
     const btnWrapper = el.querySelector(':scope > div');
     if (!btnWrapper) return;
     btnWrapper.style.position = 'relative';
-    btnWrapper.appendChild(buildWidget());
+    btnWrapper.appendChild(buildWidget(destination));
   });
 }

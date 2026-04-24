@@ -18,6 +18,7 @@ const DEFAULTS = {
   loginAsReturn: true,
   recordIdHeader: true,
   userSearch: true,
+  userSearchDestination: 'setup',
   fieldApiName: true,
 };
 
