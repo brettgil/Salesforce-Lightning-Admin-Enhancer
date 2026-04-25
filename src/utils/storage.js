@@ -19,6 +19,7 @@ const DEFAULTS = {
   recordIdHeader: true,
   userSearch: true,
   userSearchDestination: 'setup',
+  loadAll: true,
   fieldApiName: true,
 };
 

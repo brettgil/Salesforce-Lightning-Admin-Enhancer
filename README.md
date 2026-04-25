@@ -50,6 +50,9 @@ When this feature is enabled, a pin icon appears next to each item in the Setup 
 **Process Builder**
 Adds several enhancements to the Process Builder interface: drag to resize the criteria/action panel so you can see more at once, one-click copy buttons on text fields so you can grab values without selecting text manually, and full API names displayed in field selection modals instead of truncated labels.
 
+**Object Manager — Load More**
+When browsing a specific object in Object Manager — Fields, Validation Rules, Page Layouts, and more — lists load 500 records per scroll instead of the default 50. Scrolling to the bottom automatically fetches the next 500 with no extra clicks or waiting.
+
 **User Search**
 Adds a user search button directly to the search bar on both Lightning and Setup pages. Search for any user by name, username, or email — including deactivated users that Salesforce's built-in search ignores. Results show the user's name, username, and an Active or Inactive badge. Click any result to navigate directly to their user record.
 

@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Salesforce Lightning Admin Enhancer",
   "description": "Salesforce Admin Enhancer for Lightning",
-  "version": "2.12.0",
+  "version": "2.13.0",
 
   "icons": {
     "16": "lightning_stylized_icon__1__icon.png",
@@ -33,6 +33,16 @@
       "js": ["src/nav-interceptor.js"],
       "run_at": "document_start",
       "all_frames": true
+    },
+    {
+      "matches": [
+        "*://*.lightning.force.com/*",
+        "*://*.my.salesforce-setup.com/*"
+      ],
+      "js": ["src/features/loadAllIntercept.js"],
+      "run_at": "document_start",
+      "world": "MAIN",
+      "all_frames": false
     },
     {
       "matches": [

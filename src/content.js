@@ -48,4 +48,5 @@
   await load('recordIdHeader',   'src/features/recordIdHeader.js');
   await load('userSearch', 'src/features/userSearch.js', (init) => init(settings.userSearchDestination ?? 'setup'));
   await load('fieldApiName',     'src/features/fieldApiName.js');
+  await load('loadAll',          'src/features/loadAll.js');
 })();
