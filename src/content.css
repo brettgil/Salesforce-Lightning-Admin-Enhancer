@@ -530,6 +530,7 @@
   font-size: 11px;
   color: #747474;
   font-style: italic;
+  cursor: pointer;
 }
 
 /* --- Process Builder Enhancements --- */

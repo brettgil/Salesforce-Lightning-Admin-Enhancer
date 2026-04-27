@@ -26,6 +26,14 @@ export function init() {
     const span = document.createElement('span');
     span.className = 'slae-field-api-name';
     span.textContent = apiName;
+    span.title = 'Click to copy';
+
+    span.addEventListener('click', (clickEvent) => {
+      clickEvent.stopPropagation();
+      navigator.clipboard.writeText(apiName);
+      span.textContent = 'Copied!';
+      setTimeout(() => { span.textContent = apiName; }, 1500);
+    });
 
     labelContainer.append(br, span);
   });
