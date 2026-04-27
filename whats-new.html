@@ -280,11 +280,30 @@
 
   <div class="page">
 
+    <!-- v2.13.2 -->
+    <div class="release">
+      <div class="release-header">
+        <span class="release-version">v2.13.2</span>
+        <span class="badge-new">Latest</span>
+        <span class="release-date">April 2026</span>
+        <div class="release-divider"></div>
+      </div>
+      <div class="change-list">
+        <div class="change-card">
+          <span class="change-icon">⚡</span>
+          <div class="change-body">
+            <div class="change-label">Object Manager Load More — filter input restored</div>
+            <div class="change-desc">The Quick Find filter input stopped working after the initial 500 records loaded. Filter requests start at offset 0, which was being replaced with the loaded count — causing the filtered query to fetch from record 500 instead of the beginning. Fixed by resetting the offset tracker whenever a fresh query is detected.</div>
+          </div>
+          <span class="change-tag tag-fix">Fix</span>
+        </div>
+      </div>
+    </div>
+
     <!-- v2.13.1 -->
     <div class="release">
       <div class="release-header">
         <span class="release-version">v2.13.1</span>
-        <span class="badge-new">Latest</span>
         <span class="release-date">April 2026</span>
         <div class="release-divider"></div>
       </div>

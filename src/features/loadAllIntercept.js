@@ -35,6 +35,11 @@
         lastPathname = currentPath;
       }
 
+      // If the request starts at offset 0 it's a fresh query (initial load or filter change) —
+      // reset loadedCount so subsequent pages stay in sync with what's actually rendered.
+      const originalOffset = parseInt((body.match(/%22offset%22%3A(\d+)/i) ?? [])[1] ?? '0', 10);
+      if (originalOffset === 0) loadedCount = 0;
+
       const modified = body
         .replace(/%22pageSize%22%3A\d+/i, '%22pageSize%22%3A500')
         .replace(/%22offset%22%3A\d+/i, `%22offset%22%3A${loadedCount}`);
