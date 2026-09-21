@@ -1,23 +1,18 @@
 import { onElement } from '../utils/observer.js';
+import { onUrlChange } from '../utils/navWatch.js';
+import { getRecordIdFromPath } from '../utils/recordId.js';
 
 const ELEMENT_ID = 'slae-record-id';
 
-function getRecordIdFromUrl() {
-  const match = window.location.pathname.match(/\/lightning\/r\/[^/]+\/([^/]+)\//);
-  return match ? match[1] : null;
-}
+const currentId = () => getRecordIdFromPath(window.location.pathname);
 
-function updateDisplay(wrapper) {
-  const id = getRecordIdFromUrl();
-  const value = wrapper.querySelector('.slae-org-id-value');
-
+function updateDisplay(wrapper, value) {
+  const id = currentId();
   if (!id) {
     wrapper.style.display = 'none';
     return;
   }
-
   wrapper.style.display = '';
-  wrapper._currentId = id;
   value.textContent = id;
 }
 
@@ -41,18 +36,22 @@ export function init() {
 
     wrapper.append(label, value);
 
+    // Read the ID at click time, never from a cached value.
     wrapper.addEventListener('click', () => {
-      const id = wrapper._currentId;
+      const id = currentId();
       if (!id) return;
       navigator.clipboard.writeText(id);
       value.textContent = 'Copied!';
-      setTimeout(() => { value.textContent = id; }, 1500);
+      setTimeout(() => updateDisplay(wrapper, value), 1500);
     });
 
     searchItem.appendChild(wrapper);
-    updateDisplay(wrapper);
+    updateDisplay(wrapper, value);
 
-    // Update when navigating between records via SPA
-    window.addEventListener('slae-navigate', () => updateDisplay(wrapper));
+    const unsubscribe = onUrlChange(() => {
+      // Lightning may re-render the header; drop watchers for removed copies.
+      if (!wrapper.isConnected) { unsubscribe(); return; }
+      updateDisplay(wrapper, value);
+    });
   });
 }

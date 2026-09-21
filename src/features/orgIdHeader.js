@@ -1,4 +1,5 @@
 import { onElement } from '../utils/observer.js';
+import { onUrlChange } from '../utils/navWatch.js';
 
 const cacheKey = () => `orgIdCache_${window.location.hostname}`;
 
@@ -57,30 +58,22 @@ function getSetupRecordId() {
   return null;
 }
 
-function updateDisplay(wrapper, label, value, orgId) {
-  if (isSetupHomePage()) {
-    wrapper.style.display = '';
-    label.textContent = 'Org Id: ';
-    wrapper.title = 'Click to copy Org Id';
-    wrapper._currentId = orgId;
-    value.textContent = orgId;
-    return;
-  }
 
-  const recordId = getSetupRecordId();
-  if (recordId) {
-    wrapper.style.display = '';
-    label.textContent = 'Record Id: ';
-    wrapper.title = 'Click to copy Record Id';
-    wrapper._currentId = recordId;
-    value.textContent = recordId;
-  } else {
-    wrapper.style.display = '';
-    label.textContent = 'Org Id: ';
-    wrapper.title = 'Click to copy Org Id';
-    wrapper._currentId = orgId;
-    value.textContent = orgId;
+function resolveDisplay(orgId) {
+  if (!isSetupHomePage()) {
+    const recordId = getSetupRecordId();
+    if (recordId) return { label: 'Record Id: ', title: 'Click to copy Record Id', id: recordId };
   }
+  return { label: 'Org Id: ', title: 'Click to copy Org Id', id: orgId };
+}
+
+function updateDisplay(wrapper, label, value, orgId) {
+  const { label: text, title, id } = resolveDisplay(orgId);
+  wrapper.style.display = '';
+  label.textContent = text;
+  wrapper.title = title;
+  wrapper._currentId = id;
+  value.textContent = id;
 }
 
 export async function init() {
@@ -104,26 +97,21 @@ export async function init() {
 
     wrapper.append(label, value);
 
+    // Resolve at click time, never from a cached value.
     wrapper.addEventListener('click', () => {
-      const id = wrapper._currentId;
+      const { id } = resolveDisplay(orgId);
       if (!id) return;
       navigator.clipboard.writeText(id);
-      const prev = value.textContent;
       value.textContent = 'Copied!';
-      setTimeout(() => { value.textContent = prev; }, 1500);
+      setTimeout(() => updateDisplay(wrapper, label, value, orgId), 1500);
     });
 
     searchItem.appendChild(wrapper);
     updateDisplay(wrapper, label, value, orgId);
 
-    window.addEventListener('slae-navigate', () => updateDisplay(wrapper, label, value, orgId));
-
-    // Fallback: setup sidebar nav (Home, Object Manager, etc.) bypasses pushState,
-    // but Salesforce always updates the page title on navigation.
-    const titleEl = document.querySelector('title');
-    if (titleEl) {
-      new MutationObserver(() => updateDisplay(wrapper, label, value, orgId))
-        .observe(titleEl, { childList: true });
-    }
+    const unsubscribe = onUrlChange(() => {
+      if (!wrapper.isConnected) { unsubscribe(); return; }
+      updateDisplay(wrapper, label, value, orgId);
+    });
   });
 }

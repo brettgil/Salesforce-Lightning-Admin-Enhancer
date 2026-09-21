@@ -281,10 +281,29 @@
   <div class="page">
 
     <!-- v2.13.2 -->
+    <!-- v2.13.3 -->
+    <div class="release">
+      <div class="release-header">
+        <span class="release-version">v2.13.3</span>
+        <span class="badge-new">Latest</span>
+        <span class="release-date">September 2026</span>
+        <div class="release-divider"></div>
+      </div>
+      <div class="change-list">
+        <div class="change-card">
+          <span class="change-icon">🆔</span>
+          <div class="change-body">
+            <div class="change-label">Record Id / Org Id header — accurate after navigation</div>
+            <div class="change-desc">The header could show a previous record's Id, or the Org Id, until the page was refreshed. Navigation tracking ran in the wrong script context and never saw Lightning's page changes. It now runs in the page context, backed by title, tab-visibility and URL checks. Record Id parsing also handles /lightning/r/{Id}/view URLs, and "Copied!" no longer restores a stale Id.</div>
+          </div>
+          <span class="change-tag tag-fix">Fix</span>
+        </div>
+      </div>
+    </div>
+
     <div class="release">
       <div class="release-header">
         <span class="release-version">v2.13.2</span>
-        <span class="badge-new">Latest</span>
         <span class="release-date">April 2026</span>
         <div class="release-divider"></div>
       </div>
