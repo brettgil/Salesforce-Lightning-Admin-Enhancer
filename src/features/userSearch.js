@@ -12,7 +12,7 @@ function getApiBase() {
 }
 
 function escapeSoql(str) {
-  return str.replace(/'/g, "\\'");
+  return str.replace(/\\/g, '\\\\').replace(/'/g, "\\'");
 }
 
 function searchUsers(query) {

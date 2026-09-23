@@ -1,4 +1,5 @@
 import { onElement } from '../utils/observer.js';
+import { isSafeUrl } from '../utils/safeUrl.js';
 
 
 function getApiBaseUrl() {
@@ -69,10 +70,11 @@ function showDropdown(anchor, favorites) {
     ul.className = 'slae-fav-dropdown-list';
 
     for (const fav of favorites) {
+      const resolved = resolveTarget(fav.target ?? '');
+      if (!isSafeUrl(resolved)) continue;
       const li = document.createElement('li');
       const a = document.createElement('a');
       a.className = 'slae-fav-dropdown-link';
-      const resolved = resolveTarget(fav.target);
       a.href = resolved;
 
       const icon = document.createElement('span');

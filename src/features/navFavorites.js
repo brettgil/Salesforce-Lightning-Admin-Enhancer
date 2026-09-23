@@ -1,4 +1,5 @@
 import { onElement } from '../utils/observer.js';
+import { isSafeUrl } from '../utils/safeUrl.js';
 
 function buildFavorites(linksJson) {
   let links;
@@ -21,6 +22,7 @@ function buildFavorites(linksJson) {
   list.className = 'slae-nav-favs-list';
 
   for (const [label, url] of Object.entries(links)) {
+    if (!isSafeUrl(url)) continue;
     const li = document.createElement('li');
     const a = document.createElement('a');
     a.href = url;
