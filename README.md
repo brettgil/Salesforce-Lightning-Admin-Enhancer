@@ -60,3 +60,12 @@ Adds a user search button directly to the search bar on both Lightning and Setup
 
 **Snippets**
 Store frequently used formulas, SOQL queries, and notes for quick access. Snippets are managed from the extension options page — add a label and the content you want to save, then click Copy to instantly copy the full text to your clipboard. Snippets save immediately when added, removed, or reordered and are always one click away.
+
+---
+
+## Privacy & Security
+
+- Runs only on Salesforce domains. No analytics, tracking, or third-party servers.
+- Features that call the Salesforce REST API (Org ID, User Search, Setup Favorites) use your existing Salesforce session. The session is only ever sent to Salesforce REST API endpoints (`https://*.salesforce.com` / `*.force.com` under `/services/data/`).
+- Settings and snippets are stored in Chrome extension storage on your device (settings sync via your Chrome profile).
+- Shortcut and favorite links are only followed if they are web (`http`/`https`) addresses.

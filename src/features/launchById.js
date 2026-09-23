@@ -20,7 +20,7 @@ function navigate(input, error) {
   }
 
   // Relative path — navigate directly
-  if (value.startsWith('/')) {
+  if (value.startsWith('/') && !value.startsWith('//')) {
     error.classList.remove('slae-launch-error--visible');
     window.location.assign(value);
     return;

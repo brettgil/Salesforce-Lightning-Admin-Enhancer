@@ -35,10 +35,27 @@ function getSidCookie(url, tabUrl, callback) {
   });
 }
 
+// The session id is a live credential — only ever send it to a Salesforce REST endpoint.
+function isSalesforceApiUrl(value) {
+  try {
+    const { protocol, hostname, pathname } = new URL(value);
+    return protocol === 'https:'
+      && (hostname.endsWith('.salesforce.com') || hostname.endsWith('.force.com'))
+      && pathname.startsWith('/services/data/');
+  } catch {
+    return false;
+  }
+}
+
 function fetchWithSid({ apiUrl, tabUrl, fetchUrl, emptyResult, parseData, sendResponse }) {
-  getSidCookie(apiUrl, tabUrl, (cookie) => {
+  const targetUrl = fetchUrl || apiUrl;
+  if (!isSalesforceApiUrl(targetUrl)) {
+    sendResponse(emptyResult);
+    return;
+  }
+  getSidCookie(targetUrl, tabUrl, (cookie) => {
     if (!cookie) { sendResponse(emptyResult); return; }
-    fetch(fetchUrl || apiUrl, { headers: { Authorization: `Bearer ${cookie.value}` } })
+    fetch(targetUrl, { headers: { Authorization: `Bearer ${cookie.value}` } })
       .then((res) => (res.ok ? res.json() : null))
       .then((data) => sendResponse(parseData(data)))
       .catch(() => sendResponse(emptyResult));
