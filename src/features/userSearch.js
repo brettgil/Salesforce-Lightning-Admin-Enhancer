@@ -18,7 +18,7 @@ function escapeSoql(str) {
 function searchUsers(query) {
   return new Promise((resolve) => {
     const q = escapeSoql(query);
-    const soql = `SELECT Id, Name, Username, Email, IsActive FROM User WHERE Name LIKE '%${q}%' OR Username LIKE '%${q}%' OR Email LIKE '%${q}%' ORDER BY IsActive DESC, Name ASC LIMIT 10`;
+    const soql = `SELECT Id, Name, Username, Email, IsActive, Profile.Name, LastLoginDate FROM User WHERE Name LIKE '%${q}%' OR Username LIKE '%${q}%' OR Email LIKE '%${q}%' ORDER BY IsActive DESC, Name ASC LIMIT 10`;
     const url = `${getApiBase()}/services/data/v59.0/query/?q=${encodeURIComponent(soql)}`;
     chrome.runtime.sendMessage({ action: 'fetchUsers', url }, (res) => {
       if (chrome.runtime.lastError) resolve([]);
@@ -30,6 +30,28 @@ function searchUsers(query) {
 function userHref(userId, destination) {
   if (destination === 'record') return `/lightning/r/User/${userId}/view`;
   return `/lightning/setup/ManageUsers/page?address=%2F${userId}%3Fnoredirect%3D1%26isUserEntityOverride%3D1`;
+}
+
+function formatLastLogin(value) {
+  if (!value) return 'Never';
+  return new Date(value).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' });
+}
+
+function buildDetails(user) {
+  const details = document.createElement('dl');
+  details.className = 'slae-user-result-details';
+  [
+    ['Profile', user.Profile?.Name ?? '—'],
+    ['Email', user.Email ?? '—'],
+    ['Last Login', formatLastLogin(user.LastLoginDate)],
+  ].forEach(([label, value]) => {
+    const dt = document.createElement('dt');
+    dt.textContent = label;
+    const dd = document.createElement('dd');
+    dd.textContent = value;
+    details.append(dt, dd);
+  });
+  return details;
 }
 
 function buildWidget(destination) {
@@ -88,6 +110,12 @@ function buildWidget(destination) {
     }
 
     users.forEach((user) => {
+      const item = document.createElement('div');
+      item.className = 'slae-user-item';
+
+      const rowWrap = document.createElement('div');
+      rowWrap.className = 'slae-user-item-row';
+
       const row = document.createElement('a');
       row.className = 'slae-user-result';
       row.href = userHref(user.Id, destination);
@@ -110,7 +138,29 @@ function buildWidget(destination) {
       badge.textContent = user.IsActive ? 'Active' : 'Inactive';
 
       row.append(info, badge);
-      results.appendChild(row);
+
+      const toggle = document.createElement('button');
+      toggle.type = 'button';
+      toggle.className = 'slae-user-result-toggle';
+      toggle.title = 'Show details';
+      toggle.setAttribute('aria-label', `Show details for ${user.Name}`);
+      toggle.setAttribute('aria-expanded', 'false');
+      toggle.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>`;
+
+      const details = buildDetails(user);
+      details.hidden = true;
+
+      toggle.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        details.hidden = !details.hidden;
+        toggle.setAttribute('aria-expanded', String(!details.hidden));
+        item.classList.toggle('slae-user-item--expanded', !details.hidden);
+      });
+
+      rowWrap.append(row, toggle);
+      item.append(rowWrap, details);
+      results.appendChild(item);
     });
   }
 
