@@ -182,11 +182,13 @@ export function init(destination = 'setup') {
     contentWrapper.after(buildWidget(destination));
   });
 
-  // Lightning: inject inside the div wrapping the search button so right:0 aligns to the input edge
-  onElement('.forceSearchAssistant', (el) => {
-    if (el.querySelector(`#${ELEMENT_ID}`)) return;
-    const btnWrapper = el.querySelector(':scope > div');
-    if (!btnWrapper) return;
+  // Lightning: inject inside the div directly wrapping the search button so right:0 aligns to the
+  // input edge. Anchoring on the outer group breaks when the Agentforce "Ask" button is enabled,
+  // since it renders as a sibling inside that group and the widget ends up overlaying it instead.
+  onElement('.forceSearchAssistant .search-button', (searchBtn) => {
+    const assistant = searchBtn.closest('.forceSearchAssistant');
+    if (assistant.querySelector(`#${ELEMENT_ID}`)) return;
+    const btnWrapper = searchBtn.parentElement;
     btnWrapper.style.position = 'relative';
     btnWrapper.appendChild(buildWidget(destination));
   });
