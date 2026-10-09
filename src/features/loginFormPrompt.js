@@ -19,6 +19,7 @@ function buildPrompt(key, form, saved, onDismiss) {
   const box = document.createElement('input');
   box.type = 'checkbox';
   box.className = 'slae-login-prompt-box';
+  box.checked = saved === form;
 
   const text = document.createElement('span');
   text.textContent = 'Always use this login option';
@@ -33,15 +34,19 @@ function buildPrompt(key, form, saved, onDismiss) {
   dismiss.className = 'slae-login-prompt-dismiss';
   dismiss.textContent = "Don't ask again";
 
+  // What to go back to when unticked: the other form if that was saved,
+  // otherwise Salesforce's own default.
+  const previous = saved === form ? 'default' : saved;
+
   function render() {
     note.textContent = box.checked
-      ? `Saved. ${location.hostname} will open the ${form} form from now on. Change it any time in Admin Enhancer settings.`
+      ? `${location.hostname} opens the ${form} form every time. Untick to stop (Admin Enhancer).`
       : `Tick to open the ${form} form every time you visit ${location.hostname} (Admin Enhancer).`;
     dismiss.hidden = box.checked;
   }
 
   box.addEventListener('change', () => {
-    chrome.storage.sync.set({ [key]: box.checked ? form : saved });
+    chrome.storage.sync.set({ [key]: box.checked ? form : previous });
     render();
   });
 
@@ -56,13 +61,13 @@ function buildPrompt(key, form, saved, onDismiss) {
 }
 
 /**
- * Offers "Always use this login option" on a login page that was opened on
- * the non-default form (?login=1 or ?email_login=1). Ticking it saves that
- * form as the user's Preferred Login Form for this host.
+ * Shows "Always use this login option" on a login page opened on a specific
+ * form (?login=1 or ?email_login=1). It is ticked when that form is the
+ * user's Preferred Login Form for this host; ticking or unticking saves it.
  *
  * @param {string} key    loginFormTest | loginFormProd
  * @param {'username'|'email'} form  the form this page shows
- * @param {string} saved  the current setting, restored if the box is unticked
+ * @param {string} saved  the current setting
  */
 export function init(key, form, saved) {
   if (document.getElementById(PROMPT_ID)) return;

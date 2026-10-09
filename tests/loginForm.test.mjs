@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { buildLoginFormRules as build, formFromSearch, shouldOfferLoginForm as offer, loginFormKeyForHost } from '../src/utils/loginForm.js';
+import { buildLoginFormRules as build, formFromSearch, loginFormKeyForHost } from '../src/utils/loginForm.js';
 
 test('defaults build no rules', () =>
   assert.deepEqual(build({ loginFormTest: 'default', loginFormProd: 'default' }), []));
@@ -42,13 +42,3 @@ test('form from query string', () => {
   assert.equal(formFromSearch('?login=0'), null);
 });
 
-test('offer the checkbox only for a form that is not already in effect', () => {
-  assert.equal(offer('loginFormTest', 'username', 'default'), true);
-  assert.equal(offer('loginFormTest', 'username', 'username'), false);
-  assert.equal(offer('loginFormTest', 'username', 'email'), true);
-  assert.equal(offer('loginFormTest', 'email', 'default'), false);
-  assert.equal(offer('loginFormProd', 'email', 'default'), true);
-  assert.equal(offer('loginFormProd', 'username', 'default'), false);
-  assert.equal(offer('loginFormProd', 'username', 'email'), true);
-  assert.equal(offer('loginFormTest', null, 'default'), false);
-});

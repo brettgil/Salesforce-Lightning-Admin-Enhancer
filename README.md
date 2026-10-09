@@ -61,7 +61,7 @@ Adds a user search button directly to the search bar on both Lightning and Setup
 **Preferred Login Form**
 Salesforce's login pages lead with different forms: test.salesforce.com opens on email login, while login.salesforce.com opens on username login. Choose Username or Email for each page from the options page, and opening that login page takes you straight to the form you picked. Login links that carry extra details, such as a start page or single sign-on, are never redirected, and the "Log In with Email" / "Log In with Username" links on the page keep working. Both are set to Salesforce default until you choose.
 
-You can also set it from the login page itself. When you switch to the other form (for example, clicking "Log In with Username" on test.salesforce.com), an "Always use this login option" checkbox appears under Remember Me. Tick it to save that form as your preference for that login page. Click "Don't ask again", or turn off "Ask on the login page" in the options, to stop seeing it.
+You can also set it from the login page itself. On the username and email login forms (`?login=1` / `?email_login=1`), an "Always use this login option" checkbox appears under Remember Me. It's ticked when that form is your current preference. Tick it to save that form for that login page, or untick it to go back. Click "Don't ask again", or turn off "Ask on the login page" in the options, to stop seeing it.
 
 ### Snippets
 

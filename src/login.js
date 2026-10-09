@@ -4,7 +4,7 @@
   if (location.pathname !== '/') return;
 
   const {
-    LOGIN_FORM_DEFAULTS, loginFormKeyForHost, formFromSearch, shouldOfferLoginForm,
+    LOGIN_FORM_DEFAULTS, loginFormKeyForHost, formFromSearch,
   } = await import(chrome.runtime.getURL('src/utils/loginForm.js'));
 
   const key = loginFormKeyForHost(location.hostname);
@@ -12,7 +12,7 @@
   if (!key || !form) return;
 
   const settings = await chrome.storage.sync.get({ ...LOGIN_FORM_DEFAULTS, loginFormPrompt: true });
-  if (!settings.loginFormPrompt || !shouldOfferLoginForm(key, form, settings[key])) return;
+  if (!settings.loginFormPrompt) return;
 
   try {
     const { init } = await import(chrome.runtime.getURL('src/features/loginFormPrompt.js'));

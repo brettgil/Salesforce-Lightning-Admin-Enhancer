@@ -11,12 +11,6 @@ export const LOGIN_FORM_DEFAULTS = {
   loginFormProd: 'default',
 };
 
-// The form each host opens on when no parameter is given.
-export const SALESFORCE_DEFAULT_FORM = {
-  loginFormTest: 'email',
-  loginFormProd: 'username',
-};
-
 const FORM_QUERY = {
   username: '?login=1',
   email: '?email_login=1',
@@ -25,8 +19,8 @@ const FORM_QUERY = {
 /**
  * Builds declarativeNetRequest rules that send the bare root of each login
  * host to the user's preferred form. URLs with any path or query (startURL,
- * SSO, logout, the form parameters themselves) never match, and links clicked on the login page
- * itself are left alone so the in-page "Log In with ..." links keep working.
+ * SSO, logout, the form parameters themselves) never match, and links clicked
+ * on the login page itself are left alone so the in-page "Log In with ..." links keep working.
  *
  * @param {object} settings   loginForm* values: 'default' | 'username' | 'email'
  * @returns {chrome.declarativeNetRequest.Rule[]}
@@ -67,12 +61,3 @@ export function formFromSearch(search) {
   return null;
 }
 
-/**
- * Whether to offer "Always use this login option" on a login page: only when
- * the page shows a form that isn't already saved, and never for the form the
- * host opens on anyway while the setting is still on Salesforce default.
- */
-export function shouldOfferLoginForm(key, form, saved) {
-  if (!form || saved === form) return false;
-  return !(saved === 'default' && SALESFORCE_DEFAULT_FORM[key] === form);
-}
