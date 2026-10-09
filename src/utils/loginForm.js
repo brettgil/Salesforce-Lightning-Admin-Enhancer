@@ -11,6 +11,12 @@ export const LOGIN_FORM_DEFAULTS = {
   loginFormProd: 'default',
 };
 
+// The form each host opens on when no parameter is given.
+export const SALESFORCE_DEFAULT_FORM = {
+  loginFormTest: 'email',
+  loginFormProd: 'username',
+};
+
 const FORM_QUERY = {
   username: '?login=1',
   email: '?email_login=1',
@@ -42,4 +48,31 @@ export function buildLoginFormRules(settings) {
     });
   });
   return rules;
+}
+
+export function loginFormKeyForHost(host) {
+  return Object.keys(LOGIN_FORM_HOSTS).find((key) => LOGIN_FORM_HOSTS[key] === host) ?? null;
+}
+
+/**
+ * Which form a login URL's query string asks for, or null for neither.
+ *
+ * @param {string} search  location.search, e.g. '?login=1'
+ * @returns {'username'|'email'|null}
+ */
+export function formFromSearch(search) {
+  const params = new URLSearchParams(search);
+  if (params.get('login') === '1') return 'username';
+  if (params.get('email_login') === '1') return 'email';
+  return null;
+}
+
+/**
+ * Whether to offer "Always use this login option" on a login page: only when
+ * the page shows a form that isn't already saved, and never for the form the
+ * host opens on anyway while the setting is still on Salesforce default.
+ */
+export function shouldOfferLoginForm(key, form, saved) {
+  if (!form || saved === form) return false;
+  return !(saved === 'default' && SALESFORCE_DEFAULT_FORM[key] === form);
 }

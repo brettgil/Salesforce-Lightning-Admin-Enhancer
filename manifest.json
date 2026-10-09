@@ -55,6 +55,14 @@
       "js": ["src/content.js"],
       "css": ["src/content.css"],
       "all_frames": true
+    },
+    {
+      "matches": [
+        "https://test.salesforce.com/*",
+        "https://login.salesforce.com/*"
+      ],
+      "js": ["src/login.js"],
+      "css": ["src/login.css"]
     }
   ],
 

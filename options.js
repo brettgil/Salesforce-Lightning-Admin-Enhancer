@@ -18,6 +18,7 @@ const CHECKBOX_DEFAULTS = {
   userSearch: true,
   fieldApiName: true,
   loadAll: true,
+  loginFormPrompt: true,
 };
 
 // In-memory list of {label, url} objects driving the favorites UI
