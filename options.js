@@ -18,6 +18,7 @@ const CHECKBOX_DEFAULTS = {
   userSearch: true,
   fieldApiName: true,
   loadAll: true,
+  loginFormPrompt: true,
 };
 
 // In-memory list of {label, url} objects driving the favorites UI
@@ -241,6 +242,8 @@ function saveOptions() {
   settings.navFavoritesLinks = JSON.stringify(linksObj, null, 2);
   settings.appSwitchBehavior = document.getElementById('appSwitchBehavior').value;
   settings.userSearchDestination = document.getElementById('userSearchDestination').value;
+  settings.loginFormTest = document.getElementById('loginFormTest').value;
+  settings.loginFormProd = document.getElementById('loginFormProd').value;
 
   chrome.storage.sync.set(settings, () => {
     const status = document.getElementById('status');
@@ -250,7 +253,7 @@ function saveOptions() {
 }
 
 function restoreOptions() {
-  const defaults = { ...CHECKBOX_DEFAULTS, navFavoritesLinks: DEFAULT_NAV_FAV_LINKS, appSwitchBehavior: 'off', userSearchDestination: 'setup' };
+  const defaults = { ...CHECKBOX_DEFAULTS, navFavoritesLinks: DEFAULT_NAV_FAV_LINKS, appSwitchBehavior: 'off', userSearchDestination: 'setup', loginFormTest: 'default', loginFormProd: 'default' };
 
   chrome.storage.sync.get(defaults, (settings) => {
     for (const [key, value] of Object.entries(settings)) {

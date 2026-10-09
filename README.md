@@ -56,6 +56,13 @@ When browsing a specific object in Object Manager — Fields, Validation Rules, 
 **User Search**
 Adds a user search button directly to the search bar on both Lightning and Setup pages. Search for any user by name, username, or email — including deactivated users that Salesforce's built-in search ignores. Results show the user's name, username, and an Active or Inactive badge; expand a result to see their Profile, Email, and Last Login. Click any result to navigate directly to their user record.
 
+### Login
+
+**Preferred Login Form**
+Salesforce's login pages lead with different forms: test.salesforce.com opens on email login, while login.salesforce.com opens on username login. Choose Username or Email for each page from the options page, and opening that login page takes you straight to the form you picked. Login links that carry extra details, such as a start page or single sign-on, are never redirected, and the "Log In with Email" / "Log In with Username" links on the page keep working. Both are set to Salesforce default until you choose.
+
+You can also set it from the login page itself. On the username and email login forms (`?login=1` / `?email_login=1`), an "Always use this login option" checkbox appears under Remember Me. It's ticked when that form is your current preference. Tick it to save that form for that login page, or untick it to go back. Click "Don't ask again", or turn off "Ask on the login page" in the options, to stop seeing it.
+
 ### Snippets
 
 **Snippets**
@@ -66,6 +73,7 @@ Store frequently used formulas, SOQL queries, and notes for quick access. Snippe
 ## Privacy & Security
 
 - Runs only on Salesforce domains. No analytics, tracking, or third-party servers.
+- Preferred Login Form uses a browser redirect rule for the redirect itself. On the login pages, the extension only adds the "Always use this login option" checkbox. It never reads or changes the username, email, or password fields.
 - Features that call the Salesforce REST API (Org ID, User Search, Setup Favorites) use your existing Salesforce session. The session is only ever sent to Salesforce REST API endpoints (`https://*.salesforce.com` / `*.force.com` under `/services/data/`).
 - Settings and snippets are stored in Chrome extension storage on your device (settings sync via your Chrome profile).
 - Shortcut and favorite links are only followed if they are web (`http`/`https`) addresses.

@@ -779,6 +779,50 @@
       </div>
     </div>
 
+    <!-- Login -->
+    <div class="section-label">Login</div>
+
+    <div class="card">
+      <div class="select-row">
+        <div class="feature-text">
+          <div class="feature-label">Preferred Login Form</div>
+          <div class="feature-desc">Go straight to the username or email login form when you open the Salesforce login page.</div>
+        </div>
+      </div>
+      <div class="select-row" style="border-top: 1px solid var(--border); padding-top: 12px; padding-bottom: 12px;">
+        <div class="feature-text">
+          <div class="feature-label" style="font-size: 12px; font-weight: 500;">test.salesforce.com</div>
+          <div class="feature-desc">Sandbox login. Salesforce opens the email form by default.</div>
+        </div>
+        <select id="loginFormTest" class="styled-select">
+          <option value="default">Salesforce default</option>
+          <option value="username">Username</option>
+          <option value="email">Email</option>
+        </select>
+      </div>
+      <div class="select-row" style="border-top: 1px solid var(--border); padding-top: 12px; padding-bottom: 12px;">
+        <div class="feature-text">
+          <div class="feature-label" style="font-size: 12px; font-weight: 500;">login.salesforce.com</div>
+          <div class="feature-desc">Production login. Salesforce opens the username form by default.</div>
+        </div>
+        <select id="loginFormProd" class="styled-select">
+          <option value="default">Salesforce default</option>
+          <option value="username">Username</option>
+          <option value="email">Email</option>
+        </select>
+      </div>
+      <div class="feature-row" style="border-top: 1px solid var(--border); padding-top: 12px; padding-bottom: 12px;">
+        <div class="feature-text">
+          <div class="feature-label" style="font-size: 12px; font-weight: 500;">Ask on the login page</div>
+          <div class="feature-desc">Show an "Always use this login option" checkbox on the username and email login pages, so you can change this setting right there.</div>
+        </div>
+        <label class="toggle">
+          <input type="checkbox" id="loginFormPrompt">
+          <span class="toggle-track"><span class="toggle-thumb"></span></span>
+        </label>
+      </div>
+    </div>
+
     <!-- Snippets -->
     <div class="section-label">Snippets</div>
 

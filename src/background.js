@@ -1,3 +1,5 @@
+import { LOGIN_FORM_HOSTS, LOGIN_FORM_DEFAULTS, buildLoginFormRules } from './utils/loginForm.js';
+
 chrome.runtime.onInstalled.addListener(({ reason }) => {
   if (reason !== 'install' && reason !== 'update') return;
 
@@ -92,4 +94,20 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     });
     return true;
   }
+});
+
+// Preferred Login Form — keeps the redirect rules in step with the setting.
+async function syncLoginFormRules() {
+  const settings = await chrome.storage.sync.get(LOGIN_FORM_DEFAULTS);
+  const existing = await chrome.declarativeNetRequest.getDynamicRules();
+  await chrome.declarativeNetRequest.updateDynamicRules({
+    removeRuleIds: existing.map((r) => r.id),
+    addRules: buildLoginFormRules(settings),
+  });
+}
+
+chrome.runtime.onInstalled.addListener(syncLoginFormRules);
+chrome.runtime.onStartup.addListener(syncLoginFormRules);
+chrome.storage.onChanged.addListener((changes, area) => {
+  if (area === 'sync' && Object.keys(LOGIN_FORM_HOSTS).some((key) => key in changes)) syncLoginFormRules();
 });
