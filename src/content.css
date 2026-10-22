@@ -371,6 +371,12 @@
   border-color: #747474;
 }
 
+/* With the inline Ask button, the widget sits left of it (offset set in JS), so it needs its own edges */
+.has-inline-ask .slae-user-search {
+  border-left: 1px solid #747474;
+  border-radius: 0;
+}
+
 .slae-user-search-btn {
   display: flex;
   align-items: center;
