@@ -233,13 +233,36 @@ export function init(destination = 'setup') {
   });
 
   // Lightning: inject inside the div directly wrapping the search button so right:0 aligns to the
-  // input edge. Anchoring on the outer group breaks when the Agentforce "Ask" button is enabled,
-  // since it renders as a sibling inside that group and the widget ends up overlaying it instead.
+  // input edge. The Agentforce "Ask" button (.inline-ask-button) is a sibling that overlays that
+  // edge, so we measure it and shift the widget left of it (see trackAskButton).
   onElement('.forceSearchAssistant .search-button', (searchBtn) => {
     const assistant = searchBtn.closest('.forceSearchAssistant');
     if (assistant.querySelector(`#${ELEMENT_ID}`)) return;
     const btnWrapper = searchBtn.parentElement;
     btnWrapper.style.position = 'relative';
-    btnWrapper.appendChild(buildWidget(destination));
+    const widget = buildWidget(destination);
+    btnWrapper.appendChild(widget);
+    trackAskButton(assistant, btnWrapper, widget);
   });
+}
+
+// Keeps the widget's right offset equal to however far the Ask button overlaps the search box.
+// The Ask button renders asynchronously, so re-measure on any layout change in the group.
+function trackAskButton(assistant, btnWrapper, widget) {
+  const update = () => {
+    const ask = assistant.querySelector('.inline-ask-button');
+    const overlap = ask
+      ? btnWrapper.getBoundingClientRect().right - ask.getBoundingClientRect().left
+      : 0;
+    widget.style.right = overlap > 0 ? `${Math.ceil(overlap) + 4}px` : '';
+  };
+  const ro = new ResizeObserver(update);
+  ro.observe(btnWrapper);
+  const group = assistant.querySelector('.search-input-group') ?? assistant;
+  new MutationObserver(() => {
+    const ask = assistant.querySelector('.inline-ask-button');
+    if (ask) ro.observe(ask);
+    update();
+  }).observe(group, { childList: true, subtree: true });
+  update();
 }
