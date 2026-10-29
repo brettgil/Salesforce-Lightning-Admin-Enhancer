@@ -1,8 +1,24 @@
 import { onElement } from '../utils/observer.js';
 import { getSearchTools } from '../utils/searchTools.js';
+import { buildUserSoql, isPortalUser, RESULT_LIMIT } from '../utils/userQuery.js';
 
 const ELEMENT_ID = 'slae-user-search';
+const PREFS_KEY = 'userSearchPrefs';
+const DEFAULT_PREFS = { type: 'all', activeOnly: false, sort: 'name' };
 let debounceTimer = null;
+
+// Filter/sort choices are remembered per browser between uses.
+function loadPrefs() {
+  return new Promise((resolve) => {
+    chrome.storage.local.get({ [PREFS_KEY]: DEFAULT_PREFS }, (data) => {
+      resolve({ ...DEFAULT_PREFS, ...data[PREFS_KEY] });
+    });
+  });
+}
+
+function savePrefs(prefs) {
+  chrome.storage.local.set({ [PREFS_KEY]: prefs });
+}
 
 function getApiBase() {
   const hostname = window.location.hostname;
@@ -12,14 +28,9 @@ function getApiBase() {
   return `https://${hostname.replace('salesforce-setup.com', 'salesforce.com')}`;
 }
 
-function escapeSoql(str) {
-  return str.replace(/\\/g, '\\\\').replace(/'/g, "\\'");
-}
-
-function searchUsers(query) {
+function searchUsers(query, prefs) {
   return new Promise((resolve) => {
-    const q = escapeSoql(query);
-    const soql = `SELECT Id, Name, Username, Email, IsActive, Profile.Name, LastLoginDate FROM User WHERE Name LIKE '%${q}%' OR Username LIKE '%${q}%' OR Email LIKE '%${q}%' ORDER BY IsActive DESC, Name ASC LIMIT 10`;
+    const soql = buildUserSoql(query, prefs);
     const url = `${getApiBase()}/services/data/v59.0/query/?q=${encodeURIComponent(soql)}`;
     chrome.runtime.sendMessage({ action: 'fetchUsers', url }, (res) => {
       if (chrome.runtime.lastError) resolve([]);
@@ -55,7 +66,57 @@ function buildDetails(user) {
   return details;
 }
 
-function buildWidget(destination) {
+function buildControls(prefs, onChange) {
+  const controls = document.createElement('div');
+  controls.className = 'slae-user-search-controls';
+
+  const chips = document.createElement('div');
+  chips.className = 'slae-user-chips';
+  chips.setAttribute('role', 'group');
+  chips.setAttribute('aria-label', 'User type');
+  [['all', 'All'], ['standard', 'Standard'], ['portal', 'Portal']].forEach(([value, label]) => {
+    const chip = document.createElement('button');
+    chip.type = 'button';
+    chip.className = 'slae-user-chip';
+    chip.textContent = label;
+    chip.title = value === 'portal' ? 'Community, partner, customer and guest users' : '';
+    chip.setAttribute('aria-pressed', String(prefs.type === value));
+    chip.addEventListener('click', () => {
+      if (prefs.type === value) return;
+      prefs.type = value;
+      chips.querySelectorAll('.slae-user-chip').forEach((c) => c.setAttribute('aria-pressed', String(c === chip)));
+      onChange();
+    });
+    chips.appendChild(chip);
+  });
+
+  const active = document.createElement('label');
+  active.className = 'slae-user-active-toggle';
+  const activeBox = document.createElement('input');
+  activeBox.type = 'checkbox';
+  activeBox.checked = prefs.activeOnly;
+  activeBox.addEventListener('change', () => {
+    prefs.activeOnly = activeBox.checked;
+    onChange();
+  });
+  active.append(activeBox, 'Active only');
+
+  const sort = document.createElement('select');
+  sort.className = 'slae-user-sort';
+  sort.setAttribute('aria-label', 'Sort by');
+  [['name', 'Name'], ['login', 'Last Login']].forEach(([value, label]) => {
+    sort.add(new Option(label, value, false, prefs.sort === value));
+  });
+  sort.addEventListener('change', () => {
+    prefs.sort = sort.value;
+    onChange();
+  });
+
+  controls.append(chips, active, sort);
+  return controls;
+}
+
+function buildWidget(destination, prefs) {
   const wrapper = document.createElement('div');
   wrapper.id = ELEMENT_ID;
   wrapper.className = 'slae-user-search';
@@ -74,14 +135,21 @@ function buildWidget(destination) {
   const input = document.createElement('input');
   input.type = 'text';
   input.className = 'slae-user-search-input';
-  input.placeholder = 'Search by email or username...';
+  input.placeholder = 'Search by name, email or username...';
   input.autocomplete = 'off';
   input.spellcheck = false;
 
   const results = document.createElement('div');
   results.className = 'slae-user-search-results';
 
-  panel.append(input, results);
+  const controls = buildControls(prefs, () => {
+    savePrefs(prefs);
+    clearTimeout(debounceTimer);
+    doSearch(input.value.trim());
+    input.focus();
+  });
+
+  panel.append(input, controls, results);
   wrapper.append(btn, panel);
 
   function open() {
@@ -110,6 +178,10 @@ function buildWidget(destination) {
       return;
     }
 
+    // The query fetches one extra row so we know when matches were cut off.
+    const truncated = users.length > RESULT_LIMIT;
+    users = users.slice(0, RESULT_LIMIT);
+
     users.forEach((user) => {
       const item = document.createElement('div');
       item.className = 'slae-user-item';
@@ -131,6 +203,14 @@ function buildWidget(destination) {
       const meta = document.createElement('div');
       meta.className = 'slae-user-result-meta';
       meta.textContent = user.Username;
+
+      if (isPortalUser(user.UserType)) {
+        const portal = document.createElement('span');
+        portal.className = 'slae-user-result-portal';
+        portal.textContent = 'Portal';
+        portal.title = user.UserType;
+        name.appendChild(portal);
+      }
 
       info.append(name, meta);
 
@@ -163,16 +243,26 @@ function buildWidget(destination) {
       item.append(rowWrap, details);
       results.appendChild(item);
     });
+
+    const count = document.createElement('div');
+    count.className = 'slae-user-search-count';
+    count.textContent = truncated
+      ? `Showing first ${RESULT_LIMIT} matches. Refine your search to narrow them down.`
+      : `${users.length} ${users.length === 1 ? 'user' : 'users'}`;
+    results.prepend(count);
   }
 
+  // Filter changes can fire searches back to back; only render the latest one.
+  let searchSeq = 0;
   async function doSearch(query) {
+    const seq = ++searchSeq;
     if (query.length < 3) {
       results.innerHTML = '';
       return;
     }
     setStatus('Searching...');
-    const users = await searchUsers(query);
-    renderResults(users);
+    const users = await searchUsers(query, prefs);
+    if (seq === searchSeq) renderResults(users);
   }
 
   let tooltip = null;
@@ -224,11 +314,12 @@ function buildWidget(destination) {
   return wrapper;
 }
 
-export function init(destination = 'setup') {
+export async function init(destination = 'setup') {
+  const prefs = await loadPrefs();
   // Sits left of the global search box, after Launch by ID's Go button, so changes to the
   // search input itself (Ask button, Agentforce Coworker search bar) can't displace it.
   onElement('.slds-global-header__item_search', (searchItem) => {
     if (searchItem.querySelector(`#${ELEMENT_ID}`)) return;
-    getSearchTools(searchItem).appendChild(buildWidget(destination));
+    getSearchTools(searchItem).appendChild(buildWidget(destination, prefs));
   });
 }

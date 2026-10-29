@@ -383,7 +383,7 @@
   position: absolute;
   top: calc(100% + 4px);
   right: 0;
-  width: 320px;
+  width: 360px;
   background: #fff;
   border-radius: 4px;
   border: 1px solid #dddbda;
@@ -401,6 +401,96 @@
   outline: none;
   box-sizing: border-box;
   font-family: inherit;
+}
+
+.slae-user-search-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  border-bottom: 1px solid #e5e5e5;
+  font-size: 11px;
+  color: #444;
+}
+
+.slae-user-chips {
+  display: flex;
+}
+
+.slae-user-chip {
+  padding: 2px 8px;
+  border: 1px solid #c9c9c9;
+  background: #fff;
+  color: #444;
+  font-size: 11px;
+  line-height: 1.5;
+  cursor: pointer;
+  margin-left: -1px;
+}
+
+.slae-user-chip:first-child {
+  margin-left: 0;
+  border-radius: 10px 0 0 10px;
+}
+
+.slae-user-chip:last-child {
+  border-radius: 0 10px 10px 0;
+}
+
+.slae-user-chip:hover {
+  background: #f3f3f3;
+}
+
+.slae-user-chip[aria-pressed="true"] {
+  position: relative;
+  background: #0176d3;
+  border-color: #0176d3;
+  color: #fff;
+}
+
+.slae-user-active-toggle {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.slae-user-active-toggle input {
+  margin: 0;
+}
+
+.slae-user-sort {
+  margin-left: auto;
+  padding: 1px 4px;
+  border: 1px solid #c9c9c9;
+  border-radius: 4px;
+  background: #fff;
+  font-size: 11px;
+  font-family: inherit;
+  color: #444;
+}
+
+.slae-user-search-count {
+  padding: 6px 14px;
+  font-size: 11px;
+  color: #747474;
+  text-align: center;
+  border-bottom: 1px solid #f3f3f3;
+  white-space: normal;
+}
+
+.slae-user-result-portal {
+  margin-left: 6px;
+  padding: 0 5px;
+  border-radius: 3px;
+  background: #ece6f9;
+  color: #5a3d9e;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  vertical-align: 1px;
 }
 
 .slae-user-search-results {
