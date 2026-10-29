@@ -1,4 +1,5 @@
 import { onElement } from '../utils/observer.js';
+import { getSearchTools } from '../utils/searchTools.js';
 
 const BARE_ID_PATTERN = /^[a-zA-Z0-9]{15}$|^[a-zA-Z0-9]{18}$/;
 
@@ -69,7 +70,6 @@ export function init() {
     button.addEventListener('click', () => navigate(input, error));
 
     wrapper.append(input, button, error);
-    searchItem.style.position = 'relative';
-    searchItem.prepend(wrapper);
+    getSearchTools(searchItem).appendChild(wrapper);
   });
 }

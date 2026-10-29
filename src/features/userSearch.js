@@ -1,4 +1,5 @@
 import { onElement } from '../utils/observer.js';
+import { getSearchTools } from '../utils/searchTools.js';
 
 const ELEMENT_ID = 'slae-user-search';
 let debounceTimer = null;
@@ -224,45 +225,10 @@ function buildWidget(destination) {
 }
 
 export function init(destination = 'setup') {
-  // Setup: inject after the bordered content wrapper, inside the search container
-  onElement('.forceSearchInputDesktop', (el) => {
-    if (el.querySelector(`#${ELEMENT_ID}`)) return;
-    const contentWrapper = el.querySelector('.contentWrapper');
-    if (!contentWrapper) return;
-    contentWrapper.after(buildWidget(destination));
+  // Sits left of the global search box, after Launch by ID's Go button, so changes to the
+  // search input itself (Ask button, Agentforce Coworker search bar) can't displace it.
+  onElement('.slds-global-header__item_search', (searchItem) => {
+    if (searchItem.querySelector(`#${ELEMENT_ID}`)) return;
+    getSearchTools(searchItem).appendChild(buildWidget(destination));
   });
-
-  // Lightning: inject inside the div directly wrapping the search button so right:0 aligns to the
-  // input edge. The Agentforce "Ask" button (.inline-ask-button) is a sibling that overlays that
-  // edge, so we measure it and shift the widget left of it (see trackAskButton).
-  onElement('.forceSearchAssistant .search-button', (searchBtn) => {
-    const assistant = searchBtn.closest('.forceSearchAssistant');
-    if (assistant.querySelector(`#${ELEMENT_ID}`)) return;
-    const btnWrapper = searchBtn.parentElement;
-    btnWrapper.style.position = 'relative';
-    const widget = buildWidget(destination);
-    btnWrapper.appendChild(widget);
-    trackAskButton(assistant, btnWrapper, widget);
-  });
-}
-
-// Keeps the widget's right offset equal to however far the Ask button overlaps the search box.
-// The Ask button renders asynchronously, so re-measure on any layout change in the group.
-function trackAskButton(assistant, btnWrapper, widget) {
-  const update = () => {
-    const ask = assistant.querySelector('.inline-ask-button');
-    const overlap = ask
-      ? btnWrapper.getBoundingClientRect().right - ask.getBoundingClientRect().left
-      : 0;
-    widget.style.right = overlap > 0 ? `${Math.ceil(overlap) + 4}px` : '';
-  };
-  const ro = new ResizeObserver(update);
-  ro.observe(btnWrapper);
-  const group = assistant.querySelector('.search-input-group') ?? assistant;
-  new MutationObserver(() => {
-    const ask = assistant.querySelector('.inline-ask-button');
-    if (ask) ro.observe(ask);
-    update();
-  }).observe(group, { childList: true, subtree: true });
-  update();
 }
