@@ -1,5 +1,6 @@
 import { onElement } from '../utils/observer.js';
 import { onUrlChange } from '../utils/navWatch.js';
+import { placeBesideSearch } from '../utils/headerFit.js';
 import { getRecordIdFromPath } from '../utils/recordId.js';
 
 const ELEMENT_ID = 'slae-record-id';
@@ -20,7 +21,7 @@ export function init() {
   if (window.location.hostname.includes('salesforce-setup.com')) return;
 
   onElement('.slds-global-header__item_search', (searchItem) => {
-    if (searchItem.querySelector(`#${ELEMENT_ID}`)) return;
+    if (document.getElementById(ELEMENT_ID)) return;
 
     const wrapper = document.createElement('div');
     wrapper.id = ELEMENT_ID;
@@ -45,7 +46,7 @@ export function init() {
       setTimeout(() => updateDisplay(wrapper, value), 1500);
     });
 
-    searchItem.appendChild(wrapper);
+    placeBesideSearch(wrapper, searchItem, 'after');
     updateDisplay(wrapper, value);
 
     const unsubscribe = onUrlChange(() => {

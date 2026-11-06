@@ -10,14 +10,14 @@
 }
 
 /* --- Launch by ID --- */
+/* In the header's flex row, just left of the search box. The auto margin keeps it hugging the
+   search box rather than drifting into the middle of the free space. */
 .slae-search-tools {
   display: flex;
   align-items: center;
   gap: 4px;
-  position: absolute;
-  right: calc(100% + 8px);
-  top: 50%;
-  transform: translateY(-50%);
+  flex: 0 0 auto;
+  margin: 0 8px 0 auto;
   white-space: nowrap;
 }
 
@@ -29,13 +29,19 @@
 }
 
 .slae-launch-input {
-  width: 180px;
+  /* sized to the placeholder by launchById.js */
+  width: var(--slae-launch-width, 180px);
   padding: 4px 8px;
   border: 1px solid var(--slds-g-color-border-base-1, rgb(229, 229, 229));
   border-radius: 4px 0 0 4px;
   font-size: 13px;
   line-height: 1.5;
   outline: none;
+  text-overflow: ellipsis;
+}
+
+.slae-fit-2 .slae-launch-input {
+  width: var(--slae-launch-short-width, 80px);
 }
 
 .slae-launch-input:focus {
@@ -172,10 +178,10 @@
   color: #5e6b79;
   font-size: 12px;
   opacity: 0.85;
-  position: absolute;
-  left: calc(100% + 8px);
-  top: 50%;
-  transform: translateY(-50%);
+  position: relative;
+  flex: 0 0 auto;
+  align-self: center;
+  margin: 0 auto 0 8px;
 }
 
 .slae-org-id-wrapper:hover {
@@ -192,12 +198,63 @@
   white-space: nowrap;
 }
 
+/* Salesforce's stacked header on narrow windows. */
+.slae-fit-stacked {
+  position: relative;
+}
+
+/* top/left/right are set by headerFit.js to sit either side of the search box. */
+.slae-fit-stacked .slae-search-tools,
+.slae-fit-stacked .slae-org-id-wrapper {
+  position: absolute;
+  margin: 0;
+  transform: translateY(-50%);
+  /* the transform makes a stacking context; lift it so our dropdowns paint over the search box */
+  z-index: 100;
+}
+
+/* Header too tight for the full ID: show only the label, and the ID in a hover popover. */
+.slae-fit-1 .slae-org-id-wrapper {
+  padding: 2px 8px;
+  border: 1px solid var(--slds-g-color-border-base-1, #dddbda);
+  border-radius: 4px;
+  background: #fff;
+}
+
+.slae-fit-1 .slae-org-id-value {
+  display: none;
+  position: absolute;
+  top: calc(100% + 4px);
+  right: 0;
+  z-index: 9999;
+  padding: 6px 10px;
+  border: 1px solid #dddbda;
+  border-radius: 4px;
+  background: #fff;
+  color: #181818;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+.slae-fit-1 .slae-org-id-wrapper:hover .slae-org-id-value {
+  display: block;
+}
+
+.slae-fit-3 .slae-org-id-label {
+  font-size: 0;
+}
+
+.slae-fit-3 .slae-org-id-label::before {
+  content: 'ID';
+  font-size: 12px;
+}
+
 /* --- Setup Favorites --- */
 .slae-fav-dropdown {
   position: absolute;
   top: calc(100% + 8px);
   right: 0;
   width: 320px;
+  max-width: calc(100vw - 16px);
   background: #fff;
   border-radius: 4px;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
@@ -384,6 +441,8 @@
   top: calc(100% + 4px);
   right: 0;
   width: 360px;
+  max-width: calc(100vw - 16px);
+  box-sizing: border-box;
   background: #fff;
   border-radius: 4px;
   border: 1px solid #dddbda;

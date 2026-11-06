@@ -1,5 +1,6 @@
 import { onElement } from '../utils/observer.js';
 import { onUrlChange } from '../utils/navWatch.js';
+import { placeBesideSearch } from '../utils/headerFit.js';
 
 const cacheKey = () => `orgIdCache_${window.location.hostname}`;
 
@@ -83,7 +84,7 @@ export async function init() {
   if (!orgId) return;
 
   onElement('.slds-global-header__item_search', (searchItem) => {
-    if (searchItem.querySelector('#slae-org-id')) return;
+    if (document.getElementById('slae-org-id')) return;
 
     const wrapper = document.createElement('div');
     wrapper.id = 'slae-org-id';
@@ -106,7 +107,7 @@ export async function init() {
       setTimeout(() => updateDisplay(wrapper, label, value, orgId), 1500);
     });
 
-    searchItem.appendChild(wrapper);
+    placeBesideSearch(wrapper, searchItem, 'after');
     updateDisplay(wrapper, label, value, orgId);
 
     const unsubscribe = onUrlChange(() => {
