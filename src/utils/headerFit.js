@@ -20,16 +20,19 @@ function overflows(header) {
   return prevRight > bounds.right + 0.5;
 }
 
-// Stacked header: pin our widgets either side of the search box, out of flow, since Salesforce
-// gives the stacked header a fixed height and extra rows would spill over the nav bar.
-function pinBesideSearch(header, searchItem) {
+// Stacked header: pin our widgets out of flow, since Salesforce gives the stacked header a fixed
+// height and extra rows would spill over the nav bar. The Record/Org Id goes right of the search
+// box; Launch by ID and User Search go left of toolsAnchor (the search box, or the global actions
+// row above it when the search row is too narrow).
+function pinStacked(header, searchItem, toolsAnchor) {
   const bounds = header.getBoundingClientRect();
+  const middle = (rect) => `${rect.top + rect.height / 2 - bounds.top}px`;
   const search = searchItem.getBoundingClientRect();
-  const top = `${search.top + search.height / 2 - bounds.top}px`;
+  const anchor = toolsAnchor.getBoundingClientRect();
   const tools = header.querySelector(':scope > #slae-search-tools');
-  if (tools) Object.assign(tools.style, { top, right: `${bounds.right - search.left + MARGIN}px` });
+  if (tools) Object.assign(tools.style, { top: middle(anchor), right: `${bounds.right - anchor.left + MARGIN}px` });
   for (const badge of header.querySelectorAll(':scope > .slae-org-id-wrapper')) {
-    Object.assign(badge.style, { top, left: `${search.right - bounds.left + MARGIN}px` });
+    Object.assign(badge.style, { top: middle(search), left: `${search.right - bounds.left + MARGIN}px` });
   }
 }
 
@@ -56,15 +59,28 @@ export function refitHeader(header) {
   const style = getComputedStyle(header);
   const stacked = !!searchItem && (style.display !== 'flex' || style.flexDirection.startsWith('column'));
   header.classList.toggle('slae-fit-stacked', stacked);
-  if (stacked) pinBesideSearch(header, searchItem);
-  else unpin(header);
-  const fits = stacked ? () => !stackedOverflows(header) : () => !overflows(header);
   const setLevel = (level) => {
     for (let i = 1; i <= MAX_LEVEL; i++) header.classList.toggle(`slae-fit-${i}`, i <= level);
   };
-  let level = 0;
-  setLevel(level);
-  while (level < MAX_LEVEL && !fits()) setLevel(++level);
+  // Steps down until fits() holds; false if even the most compact level doesn't fit.
+  const fitLevel = (fits) => {
+    let level = 0;
+    setLevel(level);
+    while (level < MAX_LEVEL && !fits()) setLevel(++level);
+    return fits();
+  };
+
+  if (!stacked) {
+    unpin(header);
+    fitLevel(() => !overflows(header));
+    return;
+  }
+  const actions = header.querySelector('.slds-global-actions');
+  for (const anchor of [searchItem, actions]) {
+    if (!anchor) continue;
+    pinStacked(header, searchItem, anchor);
+    if (fitLevel(() => !stackedOverflows(header))) return;
+  }
 }
 
 function watch(header) {
