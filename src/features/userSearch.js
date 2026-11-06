@@ -1,5 +1,6 @@
 import { onElement } from '../utils/observer.js';
 import { getSearchTools } from '../utils/searchTools.js';
+import { keepInViewport } from '../utils/headerFit.js';
 import { buildUserSoql, isPortalUser, RESULT_LIMIT } from '../utils/userQuery.js';
 
 const ELEMENT_ID = 'slae-user-search';
@@ -154,6 +155,7 @@ function buildWidget(destination, prefs) {
 
   function open() {
     panel.hidden = false;
+    keepInViewport(panel);
     input.focus();
   }
 
@@ -311,6 +313,8 @@ function buildWidget(destination, prefs) {
     if (!wrapper.contains(e.target)) close();
   }, true);
 
+  window.addEventListener('resize', () => keepInViewport(panel));
+
   return wrapper;
 }
 
@@ -319,7 +323,7 @@ export async function init(destination = 'setup') {
   // Sits left of the global search box, after Launch by ID's Go button, so changes to the
   // search input itself (Ask button, Agentforce Coworker search bar) can't displace it.
   onElement('.slds-global-header__item_search', (searchItem) => {
-    if (searchItem.querySelector(`#${ELEMENT_ID}`)) return;
+    if (document.getElementById(ELEMENT_ID)) return;
     getSearchTools(searchItem).appendChild(buildWidget(destination, prefs));
   });
 }

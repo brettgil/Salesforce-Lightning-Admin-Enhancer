@@ -1,5 +1,6 @@
 import { onElement } from '../utils/observer.js';
 import { isSafeUrl } from '../utils/safeUrl.js';
+import { keepInViewport } from '../utils/headerFit.js';
 
 
 function getApiBaseUrl() {
@@ -113,6 +114,7 @@ function showDropdown(anchor, favorites) {
 
   anchor.style.position = 'relative';
   anchor.appendChild(dropdownEl);
+  keepInViewport(dropdownEl);
 
   setTimeout(() => document.addEventListener('click', onOutsideClick, true), 0);
 }

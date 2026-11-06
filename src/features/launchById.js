@@ -1,5 +1,6 @@
 import { onElement } from '../utils/observer.js';
 import { getSearchTools } from '../utils/searchTools.js';
+import { keepInViewport } from '../utils/headerFit.js';
 
 const BARE_ID_PATTERN = /^[a-zA-Z0-9]{15}$|^[a-zA-Z0-9]{18}$/;
 
@@ -40,7 +41,7 @@ function navigate(input, error) {
 
 export function init() {
   onElement('.slds-global-header__item_search', (searchItem) => {
-    if (searchItem.querySelector('#slae-launch-by-id')) return;
+    if (document.getElementById('slae-launch-by-id')) return;
 
     const wrapper = document.createElement('div');
     wrapper.id = 'slae-launch-by-id';
@@ -67,7 +68,30 @@ export function init() {
       error.classList.remove('slae-launch-error--visible');
     });
 
-    button.addEventListener('click', () => navigate(input, error));
+    // When the header is tight the input is hidden behind the Go button (headerFit level 3):
+    // the first click opens it as a dropdown, the next one navigates.
+    const isCollapsed = () => wrapper.closest('.slae-fit-3') !== null;
+    const setOpen = (open) => {
+      wrapper.classList.toggle('slae-launch-wrapper--open', open);
+      if (open) keepInViewport(input);
+    };
+
+    button.addEventListener('click', () => {
+      if (isCollapsed() && !wrapper.classList.contains('slae-launch-wrapper--open')) {
+        setOpen(true);
+        input.focus();
+        return;
+      }
+      navigate(input, error);
+    });
+
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') setOpen(false);
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!wrapper.contains(e.target)) setOpen(false);
+    }, true);
 
     wrapper.append(input, button, error);
     getSearchTools(searchItem).appendChild(wrapper);
