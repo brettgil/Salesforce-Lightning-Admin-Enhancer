@@ -2,9 +2,9 @@
 // items, so the search box shrinks to make room instead of us painting over its neighbours. When
 // even that isn't enough (zoomed in, narrow window), the widgets step down through compact levels.
 // Levels are cumulative: at level N the header has classes slae-fit-1 … slae-fit-N (see content.css).
-//   1 Record/Org Id collapses to a label · 2 narrower Launch by ID · 3 Record/Org Id as an "ID" chip
-//   4 Launch by ID narrower still (it expands on focus)
-const MAX_LEVEL = 4;
+//   1 Record/Org Id collapses to a label · 2 Launch by ID narrows to a short hint (it expands on focus)
+//   3 Record/Org Id as an "ID" chip
+const MAX_LEVEL = 3;
 const MARGIN = 8;
 const watched = new WeakSet();
 

@@ -29,7 +29,8 @@
 }
 
 .slae-launch-input {
-  width: 180px;
+  /* sized to the placeholder by launchById.js */
+  width: var(--slae-launch-width, 180px);
   padding: 4px 8px;
   border: 1px solid var(--slds-g-color-border-base-1, rgb(229, 229, 229));
   border-radius: 4px 0 0 4px;
@@ -40,11 +41,7 @@
 }
 
 .slae-fit-2 .slae-launch-input {
-  width: 120px;
-}
-
-.slae-fit-4 .slae-launch-input {
-  width: 80px;
+  width: var(--slae-launch-short-width, 80px);
 }
 
 .slae-launch-input:focus {
@@ -212,6 +209,8 @@
   position: absolute;
   margin: 0;
   transform: translateY(-50%);
+  /* the transform makes a stacking context; lift it so our dropdowns paint over the search box */
+  z-index: 100;
 }
 
 /* Header too tight for the full ID: show only the label, and the ID in a hover popover. */
