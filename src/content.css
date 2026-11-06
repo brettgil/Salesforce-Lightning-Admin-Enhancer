@@ -36,40 +36,15 @@
   font-size: 13px;
   line-height: 1.5;
   outline: none;
+  text-overflow: ellipsis;
 }
 
 .slae-fit-2 .slae-launch-input {
   width: 120px;
 }
 
-/* Header too tight: the input drops below the Go button and opens on click. */
-.slae-fit-3 .slae-launch-input {
-  display: none;
-  position: absolute;
-  top: calc(100% + 4px);
-  left: 0;
-  z-index: 9999;
-  width: 220px;
-  max-width: calc(100vw - 16px);
-  border-radius: 4px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-}
-
-.slae-fit-3 .slae-launch-wrapper--open .slae-launch-input {
-  display: block;
-}
-
-.slae-fit-3 .slae-launch-input:focus {
-  position: absolute;
-}
-
-.slae-fit-3 .slae-launch-button {
-  border-radius: 4px;
-  margin-left: 0;
-}
-
-.slae-fit-3 .slae-launch-error {
-  top: calc(100% + 40px);
+.slae-fit-4 .slae-launch-input {
+  width: 80px;
 }
 
 .slae-launch-input:focus {
@@ -226,11 +201,17 @@
   white-space: nowrap;
 }
 
-/* Salesforce's stacked header on narrow windows: our widgets get their own centred rows. */
+/* Salesforce's stacked header on narrow windows. */
+.slae-fit-stacked {
+  position: relative;
+}
+
+/* top/left/right are set by headerFit.js to sit either side of the search box. */
 .slae-fit-stacked .slae-search-tools,
 .slae-fit-stacked .slae-org-id-wrapper {
-  width: fit-content;
-  margin: 4px auto;
+  position: absolute;
+  margin: 0;
+  transform: translateY(-50%);
 }
 
 /* Header too tight for the full ID: show only the label, and the ID in a hover popover. */
@@ -259,11 +240,11 @@
   display: block;
 }
 
-.slae-fit-4 .slae-org-id-label {
+.slae-fit-3 .slae-org-id-label {
   font-size: 0;
 }
 
-.slae-fit-4 .slae-org-id-label::before {
+.slae-fit-3 .slae-org-id-label::before {
   content: 'ID';
   font-size: 12px;
 }

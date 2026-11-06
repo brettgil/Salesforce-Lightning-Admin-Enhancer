@@ -1,8 +1,25 @@
 import { onElement } from '../utils/observer.js';
 import { getSearchTools } from '../utils/searchTools.js';
-import { keepInViewport } from '../utils/headerFit.js';
 
 const BARE_ID_PATTERN = /^[a-zA-Z0-9]{15}$|^[a-zA-Z0-9]{18}$/;
+const EXPANDED_WIDTH = 220;
+const EDGE_MARGIN = 8;
+
+// headerFit.js narrows the input when the header is tight. While focused (which covers paste) it
+// grows leftwards over the free space; the negative margin keeps its footprint, so the Go button
+// and search box don't move.
+function expand(input) {
+  const rect = input.getBoundingClientRect();
+  const grow = Math.max(0, Math.min(EXPANDED_WIDTH - rect.width, rect.left - EDGE_MARGIN));
+  if (!grow) return;
+  input.style.width = `${parseFloat(getComputedStyle(input).width) + grow}px`;
+  input.style.marginLeft = `-${grow}px`;
+}
+
+function collapse(input) {
+  input.style.width = '';
+  input.style.marginLeft = '';
+}
 
 function navigate(input, error) {
   const value = input.value.trim();
@@ -64,34 +81,14 @@ export function init() {
       if (e.key === 'Enter') navigate(input, error);
     });
 
+    input.addEventListener('focus', () => expand(input));
+    input.addEventListener('blur', () => collapse(input));
+
     input.addEventListener('input', () => {
       error.classList.remove('slae-launch-error--visible');
     });
 
-    // When the header is tight the input is hidden behind the Go button (headerFit level 3):
-    // the first click opens it as a dropdown, the next one navigates.
-    const isCollapsed = () => wrapper.closest('.slae-fit-3') !== null;
-    const setOpen = (open) => {
-      wrapper.classList.toggle('slae-launch-wrapper--open', open);
-      if (open) keepInViewport(input);
-    };
-
-    button.addEventListener('click', () => {
-      if (isCollapsed() && !wrapper.classList.contains('slae-launch-wrapper--open')) {
-        setOpen(true);
-        input.focus();
-        return;
-      }
-      navigate(input, error);
-    });
-
-    input.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') setOpen(false);
-    });
-
-    document.addEventListener('click', (e) => {
-      if (!wrapper.contains(e.target)) setOpen(false);
-    }, true);
+    button.addEventListener('click', () => navigate(input, error));
 
     wrapper.append(input, button, error);
     getSearchTools(searchItem).appendChild(wrapper);

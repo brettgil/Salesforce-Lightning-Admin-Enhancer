@@ -2,8 +2,8 @@
 // items, so the search box shrinks to make room instead of us painting over its neighbours. When
 // even that isn't enough (zoomed in, narrow window), the widgets step down through compact levels.
 // Levels are cumulative: at level N the header has classes slae-fit-1 … slae-fit-N (see content.css).
-//   1 Record/Org Id collapses to a label · 2 narrower Launch by ID · 3 Launch by ID as a button
-//   4 Record/Org Id as a small "ID" chip
+//   1 Record/Org Id collapses to a label · 2 narrower Launch by ID · 3 Record/Org Id as an "ID" chip
+//   4 Launch by ID narrower still (it expands on focus)
 const MAX_LEVEL = 4;
 const MARGIN = 8;
 const watched = new WeakSet();
@@ -20,19 +20,51 @@ function overflows(header) {
   return prevRight > bounds.right + 0.5;
 }
 
+// Stacked header: pin our widgets either side of the search box, out of flow, since Salesforce
+// gives the stacked header a fixed height and extra rows would spill over the nav bar.
+function pinBesideSearch(header, searchItem) {
+  const bounds = header.getBoundingClientRect();
+  const search = searchItem.getBoundingClientRect();
+  const top = `${search.top + search.height / 2 - bounds.top}px`;
+  const tools = header.querySelector(':scope > #slae-search-tools');
+  if (tools) Object.assign(tools.style, { top, right: `${bounds.right - search.left + MARGIN}px` });
+  for (const badge of header.querySelectorAll(':scope > .slae-org-id-wrapper')) {
+    Object.assign(badge.style, { top, left: `${search.right - bounds.left + MARGIN}px` });
+  }
+}
+
+function unpin(header) {
+  for (const el of header.querySelectorAll(':scope > #slae-search-tools, :scope > .slae-org-id-wrapper')) {
+    Object.assign(el.style, { top: '', left: '', right: '' });
+  }
+}
+
+function stackedOverflows(header) {
+  const tools = header.querySelector(':scope > #slae-search-tools');
+  if (tools && tools.getBoundingClientRect().left < MARGIN) return true;
+  for (const badge of header.querySelectorAll(':scope > .slae-org-id-wrapper')) {
+    if (badge.getBoundingClientRect().right > window.innerWidth - MARGIN) return true;
+  }
+  return false;
+}
+
 export function refitHeader(header) {
   if (!header?.isConnected) return;
-  // On narrow windows Salesforce stops using a flex row and stacks the header items; ours then
-  // get their own rows and the full display fits.
-  const stacked = getComputedStyle(header).display !== 'flex';
+  const searchItem = header.querySelector(':scope > .slds-global-header__item_search');
+  // On narrow windows Salesforce stacks the header items (a block, or a column-reverse flex at
+  // medium widths).
+  const style = getComputedStyle(header);
+  const stacked = !!searchItem && (style.display !== 'flex' || style.flexDirection.startsWith('column'));
   header.classList.toggle('slae-fit-stacked', stacked);
+  if (stacked) pinBesideSearch(header, searchItem);
+  else unpin(header);
+  const fits = stacked ? () => !stackedOverflows(header) : () => !overflows(header);
   const setLevel = (level) => {
     for (let i = 1; i <= MAX_LEVEL; i++) header.classList.toggle(`slae-fit-${i}`, i <= level);
   };
   let level = 0;
   setLevel(level);
-  if (stacked) return;
-  while (level < MAX_LEVEL && overflows(header)) setLevel(++level);
+  while (level < MAX_LEVEL && !fits()) setLevel(++level);
 }
 
 function watch(header) {
