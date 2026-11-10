@@ -1,4 +1,5 @@
 import { LOGIN_FORM_HOSTS, LOGIN_FORM_DEFAULTS, buildLoginFormRules } from './utils/loginForm.js';
+import { STRIP_ISDTP_DEFAULTS, buildStripIsdtpRules } from './utils/isdtp.js';
 
 chrome.runtime.onInstalled.addListener(({ reason }) => {
   if (reason !== 'install' && reason !== 'update') return;
@@ -96,18 +97,33 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   }
 });
 
-// Preferred Login Form — keeps the redirect rules in step with the setting.
-async function syncLoginFormRules() {
-  const settings = await chrome.storage.sync.get(LOGIN_FORM_DEFAULTS);
+// Redirect rules (Preferred Login Form, Strip Chromeless Mode) — kept in step with their settings.
+const RULE_SETTING_DEFAULTS = { ...LOGIN_FORM_DEFAULTS, ...STRIP_ISDTP_DEFAULTS };
+
+async function syncRedirectRules() {
+  const settings = await chrome.storage.sync.get(RULE_SETTING_DEFAULTS);
   const existing = await chrome.declarativeNetRequest.getDynamicRules();
+  const rules = [...buildLoginFormRules(settings), ...buildStripIsdtpRules(settings)];
   await chrome.declarativeNetRequest.updateDynamicRules({
     removeRuleIds: existing.map((r) => r.id),
-    addRules: buildLoginFormRules(settings),
+    addRules: await supportedRules(rules),
   });
 }
 
-chrome.runtime.onInstalled.addListener(syncLoginFormRules);
-chrome.runtime.onStartup.addListener(syncLoginFormRules);
+// One rule Chrome can't compile fails the whole update, so drop it on its own.
+async function supportedRules(rules) {
+  const checks = await Promise.all(rules.map(async (rule) => {
+    const regex = rule.condition.regexFilter;
+    if (!regex) return true;
+    const { isSupported, reason } = await chrome.declarativeNetRequest.isRegexSupported({ regex });
+    if (!isSupported) console.warn(`[SLAE] Skipping redirect rule ${rule.id}: ${reason}`);
+    return isSupported;
+  }));
+  return rules.filter((_, i) => checks[i]);
+}
+
+chrome.runtime.onInstalled.addListener(syncRedirectRules);
+chrome.runtime.onStartup.addListener(syncRedirectRules);
 chrome.storage.onChanged.addListener((changes, area) => {
-  if (area === 'sync' && Object.keys(LOGIN_FORM_HOSTS).some((key) => key in changes)) syncLoginFormRules();
+  if (area === 'sync' && Object.keys(RULE_SETTING_DEFAULTS).some((key) => key in changes)) syncRedirectRules();
 });
