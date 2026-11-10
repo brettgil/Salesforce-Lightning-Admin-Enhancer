@@ -53,6 +53,9 @@ Adds several enhancements to the Process Builder interface: drag to resize the c
 **Object Manager — Load More**
 When browsing a specific object in Object Manager — Fields, Validation Rules, Page Layouts, and more — lists load 500 records per scroll instead of the default 50. Scrolling to the bottom automatically fetches the next 500 with no extra clicks or waiting.
 
+**Keep the Salesforce Header**
+Some links inside Setup pages, such as the Contact link on a User record, open the page with `?isdtp=p1` (or another `isdtp` value) in the address. Salesforce uses that parameter to hide the header, tabs and sidebar on Classic pages it shows inside Lightning, so following the link into a full tab leaves you with no navigation. The extension catches these before the page loads: a link to a record opens the Lightning record page instead, and any other page just has `isdtp` removed so it keeps the normal header. Pages Salesforce embeds inside Setup are left alone. On by default.
+
 **User Search**
 Adds a user search button to the left of the global search bar (just after the Record ID or URL Go button) on both Lightning and Setup pages. Search for any user by name, username, or email — including deactivated users that Salesforce's built-in search ignores. Results show the user's name, username, and an Active or Inactive badge; expand a result to see their Profile, Email, and Last Login. Filter to Standard or Portal (community, partner and guest) users, show active users only, and sort by Name or Last Login. Up to 50 results are shown, and your filter and sort choices are remembered. Click any result to navigate directly to their user record.
 
@@ -74,6 +77,7 @@ Store frequently used formulas, SOQL queries, and notes for quick access. Snippe
 
 - Runs only on Salesforce domains. No analytics, tracking, or third-party servers.
 - Preferred Login Form uses a browser redirect rule for the redirect itself. On the login pages, the extension only adds the "Always use this login option" checkbox. It never reads or changes the username, email, or password fields.
+- Keep the Salesforce Header also uses a browser redirect rule. It only acts on Salesforce page addresses opened in a tab that contain `isdtp`: record links are sent to the Lightning record page, and other pages have just `isdtp` removed.
 - Features that call the Salesforce REST API (Org ID, User Search, Setup Favorites) use your existing Salesforce session. The session is only ever sent to Salesforce REST API endpoints (`https://*.salesforce.com` / `*.force.com` under `/services/data/`).
 - Settings and snippets are stored in Chrome extension storage on your device (settings sync via your Chrome profile).
 - Shortcut and favorite links are only followed if they are web (`http`/`https`) addresses.

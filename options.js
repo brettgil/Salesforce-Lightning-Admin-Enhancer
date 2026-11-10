@@ -18,6 +18,7 @@ const CHECKBOX_DEFAULTS = {
   userSearch: true,
   fieldApiName: true,
   loadAll: true,
+  stripIsdtp: true,
   loginFormPrompt: true,
 };
 
